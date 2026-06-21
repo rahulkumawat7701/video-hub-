@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Movies Search Tool</title>
+    <style>
+        /* 🌊 अल्ट्रा-कूल एनिमेटेड लाइट ब्लू बैकग्राउंड */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #e0f7fa, #80deea, #b2ebf2, #4dd0e1);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            color: #2c3e50;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 🔮 प्रीमियम Glassmorphism इफ़ेक्ट */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 40px rgba(0, 131, 143, 0.2);
+        }
+
+        /* --- मेन सर्च बॉक्स स्टाइलिंग --- */
+        .search-container {
+            padding: 40px 50px;
+            border-radius: 20px;
+            text-align: center;
+            width: 90%;
+            max-width: 550px;
+            transition: transform 0.3s ease;
+        }
+
+        .search-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .search-container h2 {
+            margin-top: 0;
+            font-weight: 600;
+            color: #00838f;
+            font-size: 28px;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 4px rgba(255,255,255,0.5);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 12px;
+            position: relative;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #006064;
+            outline: none;
+            transition: all 0.3s;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        input[type="text"]::placeholder {
+            color: #90a4ae;
+        }
+
+        input[type="text"]:focus {
+            background: #ffffff;
+            border-color: #00bcd4;
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.4);
+        }
+
+        .search-btn {
+            padding: 0 30px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #00acc1, #00838f);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 131, 143, 0.3);
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(135deg, #00bcd4, #0097a7);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 188, 212, 0.5);
+        }
+
+        /* --- पॉप-अप (Modal) स्टाइलिंग --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 30, 40, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            margin: 2vh auto;
+            border-radius: 16px;
+            width: 95%;
+            max-width: 1400px;
+            height: 96vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .modal-content:fullscreen {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            border-radius: 0;
+            max-width: none;
+        }
+
+        /* --- हेडर और टैब्स --- */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            background: #e0f7fa;
+            border-bottom: 1px solid #b2ebf2;
+            position: relative;
+        }
+
+        /* 🚀 टैब स्क्रॉलबार डिज़ाइन */
+        .tabs {
+            display: flex;
+            overflow-x: auto;
+            flex-grow: 1;
+            scrollbar-width: thin;
+            scrollbar-color: #9c27b0 transparent; 
+        }
+
+        .tabs::-webkit-scrollbar { height: 6px; }
+        .tabs::-webkit-scrollbar-track { background: transparent; }
+        .tabs::-webkit-scrollbar-thumb { 
+            background: rgba(0, 188, 212, 0.5); 
+            border-radius: 10px; 
+        }
+        .tabs::-webkit-scrollbar-thumb:hover { background: #00838f; }
+
+        .tabs button {
+            background-color: transparent;
+            color: #546e7a;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 16px 24px;
+            transition: all 0.3s;
+            font-size: 15px;
+            font-weight: 600;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tabs button:hover {
+            color: #00838f;
+            background: rgba(0, 188, 212, 0.1);
+        }
+
+        .tabs button.active {
+            color: #00838f;
+            background: #ffffff;
+        }
+
+        .tabs button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #00bcd4;
+            box-shadow: 0 -2px 10px rgba(0, 188, 212, 0.5);
+        }
+
+        /* --- एक्शन बटन्स --- */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 12px;
+            background: #e0f7fa;
+        }
+
+        .action-btn {
+            background: #ffffff;
+            border: 1px solid #80deea;
+            color: #00838f;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .action-btn:hover {
+            background: #00bcd4;
+            color: white;
+            border-color: #00bcd4;
+            transform: translateY(-2px);
+        }
+
+        .close-btn:hover {
+            background: #ff5252;
+            color: white;
+            border-color: #ff5252;
+        }
+
+        /* --- प्रोग्रेस बार (Cool Loader) --- */
+        .loader-container {
+            width: 100%;
+            height: 4px;
+            background: #e0f7fa;
+            position: absolute;
+            top: 100%; 
+            left: 0;
+            z-index: 10;
+            display: none;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 30%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, #00e5ff, #00838f, transparent);
+            border-radius: 2px;
+            animation: loadingBar 1s infinite linear;
+        }
+
+        @keyframes loadingBar {
+            0% { transform: translateX(-100%); width: 30%; }
+            50% { width: 50%; }
+            100% { transform: translateX(400%); width: 30%; }
+        }
+
+        /* --- Iframe कंटेनर --- */
+        .tab-content {
+            display: none;
+            width: 100%;
+            height: calc(100% - 53px); 
+            background-color: #f5f7fa;
+            position: relative;
+        }
+
+        .tab-content.active-tab {
+            display: block;
+        }
+
+        .tab-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* 🚀 कस्टम एरर मैसेज UI (Blocked Sites के लिए) */
+        .blocked-message-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 20px;
+        }
+
+        .blocked-message-container h3 {
+            color: #d32f2f;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .blocked-message-container p {
+            color: #555;
+            font-size: 16px;
+            max-width: 500px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .open-new-window-btn {
+            padding: 14px 28px;
+            font-size: 16px;
+            background: #00bcd4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 188, 212, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .open-new-window-btn:hover {
+            background: #0097a7;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 151, 167, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .input-group { flex-direction: column; }
+            .search-btn { padding: 16px; }
+            .modal-content { width: 100%; height: 100%; margin: 0; border-radius: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-container glass-panel">
+        <h2>🍿 Movies Hub</h2>
+        <div class="input-group">
+            <input type="text" id="searchInput" placeholder="मूवी का नाम लिखें और Enter दबाएं...">
+            <button class="search-btn" onclick="startSearch()">Search</button>
+        </div>
+    </div>
+
+    <div id="searchModal" class="modal">
+        <div class="modal-content" id="modalContent">
+            
+            <div class="modal-header">
+                <div class="tabs" id="tabContainer"></div>
+                
+                <div class="header-actions">
+                    <button class="action-btn" onclick="openInNewTab()" title="Open in New Tab">↗️</button>
+                    <button class="action-btn" onclick="refreshActiveTab()" title="Refresh Page">🔄</button>
+                    <button class="action-btn" onclick="toggleFullScreen()" title="Full Screen">⛶</button>
+                    <button class="action-btn close-btn" onclick="closeModal()" title="Close Search">✖</button>
+                </div>
+
+                <div class="loader-container" id="mainLoader">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+
+            <div id="iframeContainer" style="flex-grow: 1; position: relative;"></div>
+        </div>
+    </div>
+
+    <script>
+        // 📌 आपकी दी गई साइट्स की लिस्ट
+        const sitesConfig = [
+            { id: "hdhub4u", name: "hdhub4u", urlBase: "https://new2.hdhub4u.cl/search.html?q=", spaceChar: "+", isBlocked: false },
+            { id: "All", name: "All", urlBase: "https://www.watch-movies.com.pk/?s=", spaceChar: "+", isBlocked: false },
+            { id: "desicinemas", name: "desicinemas", urlBase: "https://desicinemas.to/?s=", spaceChar: "+", isBlocked: false },
+            { id: "multimovies", name: "multimovies", urlBase: "https://multimovies.makeup/?s=", spaceChar: "+", isBlocked: false },
+            { id: "proxy", name: "proxy", urlBase: "https://111.90.151.26/?s=", spaceChar: "+", isBlocked: false },
+            { id: "filmoriental", name: "filmoriental", urlBase: "https://filmoriental.com/search.php?name=", spaceChar: "+", isBlocked: false },
+            { id: "moviescounter", name: "moviescounter", urlBase: "https://moviescounter.boston/?s=", spaceChar: "+", isBlocked: false },
+            { id: "4movievideoclip", name: "4movievideoclip", urlBase: "https://4movievideoclip.com/search/", spaceChar: "+", isBlocked: false },
+            { id: "movieshubflix", name: "MoviesHubFlix", urlBase: "https://movieshubflix.xyz/?s=", spaceChar: " ", isBlocked: false },
+            { id: "hindimovies", name: "hindimovies", urlBase: "https://ww1.hindimovies.to/full-search/", spaceChar: "-", isBlocked: false },
+            { id: "prmovies", name: "prmovies", urlBase: "https://prmovies.farm/?s=", spaceChar: "+", isBlocked: true },
+            { id: "hindilinks4u", name: "hindilinks4u", urlBase: "https://hindilinks4u.party/?s=", spaceChar: "+", isBlocked: true },
+            { id: "desimovies", name: "desimovies", urlBase: "https://www.desimovies.ru/?q=", spaceChar: "+", isBlocked: true },
+            { id: "thekhatrimaza", name: "thekhatrimaza", urlBase: "https://thekhatrimaza.soy/?s=", spaceChar: "+", isBlocked: true },
+            { id: "4khdhub", name: "4khdhub", urlBase: "https://4khdhub.one/?s=", spaceChar: "+", isBlocked: false },
+            { id: "katmovie4k", name: "katmovie4k", urlBase: "https://katmovie4k.mov/?s=", spaceChar: "+", isBlocked: false },
+            { id: "katmoviehd", name: "katmoviehd", urlBase: "https://new.katmoviehd.top/?s=", spaceChar: "+", isBlocked: false },
+            { id: "moviesbaba", name: "moviesbaba", urlBase: "https://moviesbaba.lol/?s=", spaceChar: "+", isBlocked: false },
+            { id: "fullhdmovie", name: "fullhdmovie", urlBase: "https://fullhdmovie.online/?s=", spaceChar: " ", isBlocked: true },
+            { id: "movienite", name: "movienite", urlBase: "https://movienite.org/search/", spaceChar: "+", isBlocked: false }
+            
+            
+        ];
+
+        // ⌨️ Enter Key Search
+        document.getElementById('searchInput').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); 
+                startSearch();
+            }
+        });
+
+        // 🖱️ माउस व्हील से टैब्स को लेफ्ट-राइट खिसकाना
+        const tabScroll = document.getElementById('tabContainer');
+        tabScroll.addEventListener('wheel', function(event) {
+            if (event.deltaY !== 0) {
+                event.preventDefault();
+                tabScroll.scrollLeft += event.deltaY;
+            }
+        });
+
+        function startSearch() {
+            const rawQuery = document.getElementById('searchInput').value.trim();
+            if (!rawQuery) {
+                alert("कृपया पहले कुछ सर्च करने के लिए लिखें!");
+                document.getElementById('searchInput').focus();
+                return;
+            }
+
+            const tabContainer = document.getElementById('tabContainer');
+            const iframeContainer = document.getElementById('iframeContainer');
+            
+            tabContainer.innerHTML = '';
+            iframeContainer.innerHTML = '';
+
+            sitesConfig.forEach((site, index) => {
+                const encodedQuery = rawQuery.split(' ').join(site.spaceChar);
+                const finalUrl = site.urlBase + encodedQuery;
+
+                // 1. टैब बटन बनाना
+                const tabBtn = document.createElement('button');
+                tabBtn.innerText = site.name;
+                tabBtn.className = index === 0 ? "active" : "";
+                tabBtn.onclick = () => switchTab(site.id, tabBtn);
+                tabContainer.appendChild(tabBtn);
+
+                // 2. कंटेंट कंटेनर बनाना
+                const contentDiv = document.createElement('div');
+                contentDiv.id = `content-${site.id}`;
+                contentDiv.className = index === 0 ? "tab-content active-tab" : "tab-content";
+
+                // 3. चेक करें कि वेबसाइट ब्लॉक है या नहीं
+                if (site.isBlocked) {
+                    contentDiv.innerHTML = `
+                        <div class="blocked-message-container">
+                            <h1 style="font-size: 50px; margin: 0;">🛡️</h1>
+                            <h3>This site can't be reached here</h3>
+                            <p>सुरक्षा कारणों (X-Frame-Options) से यह वेबसाइट Iframe के अंदर ओपन होने की अनुमति नहीं देती। कृपया इसे सीधे नए टैब में खोलने के लिए नीचे दिए गए बटन पर क्लिक करें।</p>
+                            <button class="open-new-window-btn" onclick="window.open('${finalUrl}', '_blank')">
+                                Open in New Window ↗️
+                            </button>
+                        </div>
+                    `;
+                    contentDiv.dataset.noloader = "true";
+                } else {
+                    const iframe = document.createElement('iframe');
+                    iframe.id = `iframe-${site.id}`;
+                    iframe.sandbox = "allow-scripts allow-same-origin allow-forms"; 
+                    
+                    iframe.onload = function() {
+                        if (contentDiv.classList.contains('active-tab')) {
+                            document.getElementById('mainLoader').style.display = 'none';
+                        }
+                    };
+
+                    iframe.src = finalUrl;
+                    contentDiv.appendChild(iframe);
+                }
+                
+                iframeContainer.appendChild(contentDiv);
+            });
+
+            // पहला टैब खुलते ही चेक करें कि लोडर दिखाना है या नहीं
+            if (sitesConfig[0].isBlocked) {
+                document.getElementById('mainLoader').style.display = 'none';
+            } else {
+                document.getElementById('mainLoader').style.display = 'block';
+            }
+            
+            document.getElementById('searchModal').style.display = 'block';
+        }
+
+        function switchTab(siteId, clickedBtn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active-tab'));
+            document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+
+            const targetContent = document.getElementById(`content-${siteId}`);
+            targetContent.classList.add('active-tab');
+            clickedBtn.classList.add('active');
+
+            const mainLoader = document.getElementById('mainLoader');
+            
+            // अगर यह Blocked Site वाला टैब है, तो लोडर न चलाएं
+            if (targetContent.dataset.noloader === "true") {
+                mainLoader.style.display = 'none';
+            } else {
+                mainLoader.style.display = 'block';
+                setTimeout(() => {
+                    mainLoader.style.display = 'none';
+                }, 800);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('searchModal').style.display = 'none';
+            document.getElementById('iframeContainer').innerHTML = ''; 
+            document.getElementById('mainLoader').style.display = 'none';
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+        }
+
+        function refreshActiveTab() {
+            const activeContent = document.querySelector('.tab-content.active-tab');
+            if (activeContent && activeContent.dataset.noloader !== "true") {
+                const iframe = activeContent.querySelector('iframe');
+                if (iframe) {
+                    document.getElementById('mainLoader').style.display = 'block';
+                    iframe.src = iframe.src;
+                }
+            }
+        }
+
+        function openInNewTab() {
+            const activeContent = document.querySelector('.tab-content.active-tab');
+            if (activeContent) {
+                // अगर Blocked साइट है, तो बटन के अंदर के onClick वाले URL को लें
+                if (activeContent.dataset.noloader === "true") {
+                    const btn = activeContent.querySelector('.open-new-window-btn');
+                    btn.click();
+                } else {
+                    const iframe = activeContent.querySelector('iframe');
+                    if (iframe && iframe.src) {
+                        window.open(iframe.src, '_blank');
+                    }
+                }
+            }
+        }
+
+        function toggleFullScreen() {
+            const modalContent = document.getElementById('modalContent');
+            if (!document.fullscreenElement) {
+                if (modalContent.requestFullscreen) modalContent.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
