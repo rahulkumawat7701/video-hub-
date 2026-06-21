@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies Hub</title>
+    <style>
+        /* --- CSS Variables for Themes --- */
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --success: #10b981;
+            --success-hover: #059669;
+            --border-color: #e2e8f0;
+            --header-bg: rgba(241, 245, 249, 0.9);
+        }
+
+        body.dark-mode {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --border-color: #334155;
+            --header-bg: rgba(15, 23, 42, 0.9);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        /* --- Header & Controls --- */
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .utility-btns button {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .utility-btns button:hover {
+            background: var(--bg-color);
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 900px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .filter-controls::-webkit-scrollbar {
+            display: none;
+        }
+
+        .search-bar {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-main);
+            font-size: 16px;
+            outline: none;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-main);
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .category-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* --- Grid View --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* --- Card Styles --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card img {
+            object-fit: cover;
+            width: 100%;
+            height: 150px;
+            transition: transform 0.3s;
+        }
+
+        .card-content { padding: 15px; flex: 1; }
+        .card .title { font-weight: bold; font-size: 16px; color: var(--text-main); margin-top: 5px; }
+        .card .category-label { font-size: 12px; color: var(--primary); text-transform: uppercase; font-weight: 700; }
+
+        /* --- Favorites Heart --- */
+        .fav-star {
+            position: absolute;
+            top: 10px; right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none; border-radius: 50%;
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; cursor: pointer; z-index: 10;
+            color: #cbd5e1; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode .fav-star { background: rgba(30, 41, 59, 0.9); }
+        .fav-star.active { color: #f59e0b; }
+        #sentinel { height: 20px; margin: 20px 0; }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .header { padding: 12px 15px; gap: 10px; }
+            .header h1 { font-size: 20px; }
+            .utility-btns button { padding: 6px 12px; font-size: 14px; }
+            .filter-controls { flex-wrap: wrap; justify-content: center; padding-bottom: 5px; }
+            .search-bar { width: 100%; min-width: unset; padding: 8px 15px; font-size: 14px; }
+            .category-btn { padding: 8px 16px; font-size: 14px; }
+            .grid-container { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin: 20px auto; padding: 0 15px; }
+            .card img { height: 120px; }
+            
+            /* COMPACT MODAL HEADER FOR MOBILE */
+            .modal-header {
+                padding: 6px 8px;
+                gap: 5px;
+            }
+            .modal-title {
+                display: none; /* जगह बचाने के लिए मोबाइल में टाइटल हाईड किया गया है */
+            }
+            .server-btn, .modal-actions button {
+                padding: 4px 8px !important;
+                font-size: 11px !important;
+                border-radius: 4px !important;
+            }
+            .modal-servers-wrapper { gap: 5px; }
+            .modal-servers { gap: 4px; }
+            .modal-actions { gap: 5px; }
+        }
+
+        /* --- Modal (Pop-up) --- */
+        .modal-overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(5px);
+            z-index: 1000; justify-content: center; align-items: center;
+        }
+
+        .modal-overlay.show { display: flex; }
+        
+        .modal-content {
+            width: 95%; height: 95%; background: var(--card-bg);
+            border-radius: 12px; display: flex; flex-direction: column; overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content.is-fullscreen {
+            width: 100% !important; height: 100% !important; border-radius: 0 !important;
+        }
+        
+        /* NEW COMPACT DESKTOP HEADER */
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+            padding: 8px 12px; background: var(--bg-color); border-bottom: 1px solid var(--border-color); gap: 8px;
+        }
+
+        .modal-servers-wrapper { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .modal-servers { display: flex; gap: 6px; flex-wrap: wrap; }
+        
+        .server-btn {
+            background: var(--card-bg); color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 5px 10px; /* Reduced Padding */
+            border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 12px; /* Smaller Font */
+            transition: all 0.2s; text-decoration: none; display: inline-block;
+        }
+
+        .server-btn:hover { background: var(--border-color); }
+        .server-btn.active {
+            background: var(--primary); color: white; border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+        }
+
+        .new-tab-btn { background: var(--success); color: white !important; border-color: var(--success); }
+        .new-tab-btn:hover { background: var(--success-hover) !important; border-color: var(--success-hover) !important; }
+
+        .modal-actions { display: flex; align-items: center; gap: 6px; }
+        .modal-actions button {
+            color: #fff; border: none; padding: 5px 10px; /* Reduced Padding */
+            cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 12px; /* Smaller Font */
+        }
+        
+        .modal-title { margin-right: 10px; font-weight: 700; font-size: 14px; color: var(--text-main); }
+        .btn-fullscreen { background: var(--primary); }
+        .btn-close { background: var(--danger); }
+        .modal-body { flex: 1; width: 100%; background: #000; }
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="top-row">
+            <h1>Movies Hub</h1>
+            <div class="utility-btns">
+                <button id="themeToggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+            </div>
+        </div>
+        <div class="filter-controls">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search websites..." onkeyup="handleFilterChange()">
+            <button class="category-btn active" onclick="filterCategory('All', this)">All</button>
+            <button class="category-btn" onclick="filterCategory('porn', this)">porn</button>
+            <button class="category-btn" onclick="filterCategory('web series', this)">web series</button>
+             <button class="category-btn" onclick="filterCategory('mms', this)">mms</button>
+            <button class="category-btn" style="color: #f59e0b;" onclick="filterCategory('Favs', this)">⭐ Favorites</button>
+        </div>
+    </div>
+
+    <div class="grid-container" id="cardGrid"></div>
+    <div id="sentinel"></div>
+
+    <div class="modal-overlay" id="myModal">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header">
+                
+                <div class="modal-servers-wrapper">
+                    <div class="modal-title" id="modalTitle"></div>
+                    <div class="modal-servers" id="modalServersContainer"></div>
+                    <a id="openNewTabBtn" href="#" target="_blank" class="server-btn new-tab-btn" style="display: none;">↗ Open in New Tab</a>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn-fullscreen" onclick="toggleFullScreen()">⛶ Full Screen</button>
+                    <button class="btn-close" onclick="closeModal()">✖ Close</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <!-- allow-popups हटा दिया गया है ताकि फालतू ऐड्स नए टैब में ना खुलें -->
+                <iframe id="webFrame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cardsData = [
+            { id: 1, title: "comatozze", category: "porn", imgUrl: "https://www.babepedia.com/user-uploads/Comatozze10.jpg", siteUrls: ["https://hi.xhamster.desi/creators/comatozze", "https://www.pussyspace.com/comatozz/","https://www.pornhub.org/model/comatozze","https://www.xvideos.com/cumatozz_official#_tabVideos"] },
+            { id: 2, title: "vika sun", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/ODI2ZjhlZjZkZTJiNGNiMzIzMjM3OTExZjFiN2FhYzI/s(w:1280,h:720),webp/029/010/024/1280x720.17733497.jpg", siteUrls: ["https://xhamster.com/creators/vika-sun","https://www.xvideos.com/webcam-models/vika5sun-model#_tabVideos","https://www.pornhub.org/video/search?search=vika+sun"] },
+            { id: 3, title: "Jenny Lux", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/MmM1ZGY1M2ZjMmZiZmQ5N2ZhMzFlMTE1NDMzNzdlNjQ/s(w:1280,h:720),webp/026/270/161/1280x720.17444392.jpg", siteUrls: ["https://xhamster.com/creators/jenny-lux", "https://www.xvideos.com/jennylux2#_tabVideos","https://www.pussyspace.com/jenny-lux/","https://www.pornhub.org/model/jenny-lux","https://teenxy.com/models/jenny-lux/"] },
+            { id: 4, title: "mysaaat", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/NmVhN2VlMDYyOWM0YmU5NTBiNjUzYTA4MDYwYmRmYjM/s(w:1280,h:720),webp/023/887/524/1280x720.c.jpg.v1697268756", siteUrls: ["https://www.pornhub.org/model/mysaaat","https://xhamster.com/creators/mysaaat","https://teenxy.com/models/mysaaat/"] },
+            { id: 5, title: "Dolly Sky ", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/ZmVmM2FhZWU4YmYyMTA5OTc1YjkzNzZiZWMzOGFjNDY/s(w:1280,h:720),webp/026/446/152/v2/2560x1440.225.webp", siteUrls: ["https://www.pornhub.org/model/dolly-sky","https://teenxy.com/models/dolly-sky/","https://xhamster.com/creators/dolly-sky"] },
+            { id: 6, title: "MooneySweety", category: "MooneySweety", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/N2VkNGQ2MWY5MjAzZjk0NDViMDdkZDQxY2E4MzcyZDc/s(w:1280,h:720),webp/022/187/823/1280x720.c.jpg.v1653128101", siteUrls: ["https://www.xvideos.com/sweet_paula#_tabVideos","https://www.pornhub.org/model/mooneysweety/videos","https://teenxy.com/models/mooneysweety/","https://xhamster.com/creators/mooneysweety"] },
+            { id: 7, title: "wowlove milf", category: "porn", imgUrl: "https://thumb-cdn77.xvideos-cdn.com/488ce6e0-5cff-4f9d-8c8c-a8e96d69f8d7/0/xv_30_p.jpg", siteUrls: ["https://www.xvideos.com/wow_love5","https://www.pornhub.org/model/wow-love/videos","https://xhamster.com/creators/wowlove"] },
+            { id: 8, title: "BootyFrutti", category: "porn", imgUrl: "https://www.babepedia.com/user-uploads/Bootyfrutti4.jpg", siteUrls: ["https://www.xvideos.com/bootyfrutti#_tabVideos","https://www.pornhub.org/model/bootyfrutti","https://teenxy.com/models/bootyfrutti/","https://xhamster.com/creators/bootyfrutti"] },
+            { id: 9, title: "Booty_assx", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/ZjE5ZTk1NGIzZGYxMzg5YjA0OTI3MDEwZmY4NTI0Zjc/s(w:1280,h:720),webp/024/002/509/v2/2560x1440.287.webp", siteUrls: ["https://xhamster.com/creators/booty-assx","https://www.xvideos.com/booty_assx#_tabVideos"] },
+            { id: 10, title: "SweetHerry", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/ZjljOTBmYjEzYWNiZmFmY2NmMzgzNGFhNWFiNGM1Yzk/s(w:1280,h:720),webp/027/892/722/1280x720.17617750.jpg", siteUrls: ["https://xhamster.com/creators/sweetherry","https://www.xvideos.com/channels/sweet_herry_official#_tabVideos","https://www.pussyspace.com/search?q=SweetHerry","https://www.pornhub.org/model/sweetherry/videos","https://teenxy.com/models/sweetherry/"] },
+            { id: 11, title: "Diana Rider", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/ZjgxOWQyYzdmOTk3YmNkNTdlOTAwNGU1OWQ5MzQ4ODM/s(w:1280,h:720),webp/027/417/309/1280x720.17572424.jpg", siteUrls: ["https://xhamster.com/creators/diana-rider","https://teenxy.com/models/diana-rider2/","https://www.xvideos.com/diana_rider#_tabVideos","https://www.pornhub.org/model/diana-rider/videos"] },
+            { id: 12, title: "Bellamurr", category: "porn", imgUrl: "https://icdn04.teenxy.com/7000/7196/preview_360p.mp4.jpg", siteUrls: ["https://xhamster.com/creators/bellamurr","https://teenxy.com/models/bellamurr/","https://www.pornhub.org/model/bellamurr/videos"] },
+            { id: 13, title: "linamigurt", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/Y2I1ZTIwOGZkZWVlY2I3NDEyMGI0ZDU3YzRkNzA3N2Y/s(w:526,h:298),webp/024/403/799/1280x720.17102420.jpg", siteUrls: ["https://xhamster.com/creators/linamigurt"] },
+            { id: 14, title: "FantasyBabe", category: "porn", imgUrl: "https://thumb-cdn77.xvideos-cdn.com/2d139967-ab9d-4d9c-a92f-51956f3f0587/0/xv_30_p.jpg", siteUrls: ["https://hi.xhamster.desi/creators/fantasybabe","https://www.xvideos.com/fantasybabe3#_tabVideos","https://www.pornhub.org/video/search?search=fantasybabe"] },
+            { id: 15, title: "Saanvi Bahl", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/MjM0Yjg2MmE3MGI3ODMzZDkxNTM3ZGQ3ZDA0NmZmYTc/s(w:1280,h:720),webp/028/862/551/1280x720.17717796.jpg", siteUrls: ["https://xhamster.com/creators/saanvi-bahl","https://www.xvideos.com/amateurs/myanma_porn1#_tabVideos","https://www.pussyspace.com/search?q=Myanma+Porn","https://www.pornhub.org/model/saanvi-bahl/videos"] },
+            { id: 16, title: "Lilly Hall", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/ZjFjYmMzMzkwZTRlOWExYmU0NmFhOTg5MjllZTRhMDA/s(w:1280,h:720),webp/024/336/454/1280x720.17085268.jpg", siteUrls: ["https://xhamster.com/pornstars/lilly-hall","https://www.xvideos.com/pornstars/lilly-hall#_tabVideos"] },
+            { id: 16, title: "Carmela Clutch", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/NDExYWI0MWI0YjAxYWFlOWNiMTBkNmEyMGQ0ZGM4ZTI/s(w:1280,h:720),webp/022/478/109/v2/2560x1440.210.webp", siteUrls: ["https://xhamster.com/pornstars/carmela-clutch","https://www.pornhub.org/pornstar/carmela-clutch/videos"] }, 
+            { id: 16, title: "Charlie Forde", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/NGJiMGRhYzIyYTFkOWUzMjM3ODE1MGQwZTg1NGQ3NDE/s(w:1280,h:720),webp/023/995/964/1280x720.c.jpg.v1699891762", siteUrls: ["https://xhamster.com/pornstars/charlie-forde"] },
+            { id: 16, title: "Blake Blossom", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/ZWIxZWYxZjdlYzc5ODg5NGZiNzJkMGZjYzMzYWUxMTc/s(w:1280,h:720),webp/023/251/298/v2/2560x1440.246.webp", siteUrls: ["https://xhamster.com/pornstars/blake-blossom","https://www.xvideos.com/pornstars/blake-blossom#_tabVideos","https://www.pornhub.org/video/search?search=blake+blossom","https://teenxy.com/models/blake-blossom/"] },
+            { id: 16, title: "Sweetfantasy", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/M2YzYmI2MGE0ZTZlYTczZWY1YWU4Zjc5OGZiMTA1Zjg/s(w:1280,h:720),webp/028/252/873/1280x720.17653390.jpg", siteUrls: ["https://xhamster.com/creators/sweetfantasy131"] },
+            { id: 16, title: "Kali Roses", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/ZDI3MjkwYjE3NzI4NDU1OGU4MGQxZDJjNTRjY2ZlNDY/s(w:1280,h:720),webp/023/162/290/v2/2560x1440.205.webp", siteUrls: ["https://xhamster.com/pornstars/kali-roses","https://www.xvideos.com/pornstars/kali-rose-1#_tabVideos","https://www.pornhub.org/pornstar/kali-roses/videos","https://teenxy.com/models/kali-roses/"] },
+            { id: 16, title: "Vivian Taylor", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/ZDU0ZWU5ZWE4ZjViYWY2YjY2MDc2YTYzZWQxOGY0YzA/s(w:1280,h:720),webp/024/446/965/1280x720.17110989.jpg", siteUrls: ["https://xhamster.com/pornstars/vivian-taylor","https://www.xvideos.com/pornstars/vivian-taylor#_tabVideos","https://www.pornhub.org/pornstar/vivian-taylor/videos"] },
+            { id: 16, title: "Mandy Muse", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/NTc4YTVkZmNiMWUyYzViZWFmYjUzYjMwOThjNTdkZGI/s(w:1280,h:720),webp/023/812/741/v2/2560x1440.207.webp", siteUrls: ["https://xhamster.com/pornstars/mandy-muse","https://www.xvideos.com/pornstars/mandy-muse#_tabVideos","https://teenxy.com/models/mandy-muse/","https://www.pornhub.org/video/search?search=mandy+muse"] },
+            { id: 16, title: "Natasha Nice", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/OGM1Mjc5YWM3ZTIwZjZlZTY2OWMzOTliZTA5ZDIxYTE/s(w:1280,h:720),webp/023/276/558/1280x720.c.jpg.v1682734662", siteUrls: ["https://xhamster.com/pornstars/natasha-nice","https://www.xvideos.com/?k=Natasha+Nice","https://www.pornhub.org/pornstar/natasha-nice/videos"] },
+            { id: 16, title: "Angela White", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/NTE5OTBmMGNhZTFhMTc1NjRhYTFmZDUwOWQ4NDhiMjk/s(w:1280,h:720),webp/021/821/650/1280x720.c.jpg.v1640911920", siteUrls: ["https://xhamster.com/pornstars/angela-white","https://www.xvideos.com/pornstars/angela-white1#_tabVideos"] },
+            { id: 16, title: "Jordi El Nino Polla", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/ZjkwNDE1Yjc4ODhhZjFiMTI5YTdiNzAxNGJiZjQyNGE/s(w:1280,h:720),webp/025/575/248/1280x720.17329109.jpg", siteUrls: ["https://xhamster.com/pornstars/jordi-el-nino-polla","https://www.xvideos.com/pornstars/jordi-el-nino-polla-1#_tabVideos"] },
+            { id: 16, title: "Keira Croft", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/NTA1MWZmNmFjYTA3NDZkYzI5ZjdhZTMyNTdmOWIxNmM/s(w:1280,h:720),webp/021/354/279/1280x720.1.jpg", siteUrls: ["https://xhamster.com/pornstars/keira-croft","https://www.xvideos.com/models/keira__croft#_tabVideos"] },
+            { id: 16, title: "Alyx Star", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/MTFlYTI1YzFmMzZjNDBiMmZhOTc4MjU5ZDBhZmI5NTE/s(w:1280,h:720),webp/022/746/695/1280x720.c.jpg.v1668500254", siteUrls: ["https://xhamster.com/pornstars/alyx-star","https://www.xvideos.com/pornstars/alyx-star#_tabVideos"] },
+            { id: 16, title: "Syren Demer", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/NWE0ZjBhMTMwZWYzMjQ3NmE3MjJhMGQzOWY3ZTkxMzI/s(w:1280,h:720),webp/024/828/801/1280x720.17193610.jpg", siteUrls: ["https://xhamster.com/pornstars/syren-demer"] },
+            { id: 16, title: "Aubree Valentine", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/ZTg3ZmNlZjQ1MDQ4NjNhNjMyZGE5YmRiYTcwYjZiNDQ/s(w:1280,h:720),webp/025/029/793/1280x720.17235702.jpg", siteUrls: ["https://xhamster.com/pornstars/aubree-valentine"] },
+            { id: 16, title: "Haley Spades", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/NTY0ZDM0ZGJkODlmMTBkZjEzZTc1MjQ3ZmUzOTJiZjM/s(w:1280,h:720),webp/028/811/513/1280x720.17711382.jpg", siteUrls: ["https://xhamster.com/pornstars/haley-spades"] },
+            { id: 16, title: "Brookie Blair", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/NjM3MTkxZWRmNGQ4NTg2YTM2YTA4MmU3NDIwZDVjZDE/s(w:1280,h:720),webp/025/560/726/1280x720.17327613.jpg", siteUrls: ["https://xhamster.com/pornstars/brookie-blair","https://www.xvideos.com/models/brookie-blair#_tabVideos"] },
+            { id: 16, title: "mylf", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/000/018/296/logo.jpg.v1614969609", siteUrls: ["https://xhamster.com/channels/mylf","https://www.xvideos.com/mylf_official#_tabVideos","https://www.pornhub.org/channels/mylf"] },
+            { id: 16, title: "Mommys Boy ", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/000/064/198/logo.jpg.v1706822776", siteUrls: ["https://www.xvideos.com/mommysboy#_tabVideos","https://xhamster.com/channels/mommys-boy"] },
+            { id: 16, title: "Milfy", category: "porn", imgUrl: "https://ei.phncdn.com/(m=bLazqgK)(mh=C4i3eQ1Hh6EsVEc-)0cb6597e-3a91-4454-b143-abb60d7c90e8.jpg", siteUrls: ["https://xhamster.com/channels/milfy"] },
+            { id: 16, title: "Moms Teach Sex", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/000/003/709/logo.jpg.v1539202581", siteUrls: ["https://xhamster.com/channels/moms-teach-sex"] },
+            { id: 16, title: "Mom Wants To Breed", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/133/658/875/logo.jpg.v1680043628", siteUrls: ["https://xhamster.com/channels/mom-wants-to-breed"] },
+            { id: 16, title: "Deeper", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/000/042/071/logo.jpg.v1556042951", siteUrls: ["https://xhamster.com/channels/deeper","https://www.xvideos.com/deeper_com#_tabVideos"] },
+            { id: 16, title: "Anal Mom", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/000/058/202/logo.jpg.v1595936968", siteUrls: ["https://xhamster.com/channels/anal-mom"] },
+            { id: 16, title: "My pervy family", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/000/013/100/logo.jpg.v1545992098", siteUrls: ["https://xhamster.com/channels/my-pervy-family","https://www.xvideos.com/myperyfamily#_tabVideos"] },
+            { id: 16, title: "Pure Taboo", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/000/011/580/logo.jpg.v1706822031", siteUrls: ["https://xhamster.com/channels/pure-taboo","https://www.xvideos.com/puretabooofficial#_tabVideos"] },
+            { id: 16, title: "Mommys Girl", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/000/005/975/logo.jpg.v1706821727", siteUrls: ["https://xhamster.com/channels/mommys-girl"] },
+             { id: 16, title: "Daddy4K", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/000/012/603/logo.jpg.v1542016002", siteUrls: ["https://xhamster.com/channels/daddy4k"] },
+            { id: 16, title: "VIP4K", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/MDAxM2I0MGU0YTI2MDc4MzJmOTcyOWU0ZDE1OTk4YmI/s(w:1280,h:720),webp/028/526/008/1280x720.17684115.jpg", siteUrls: ["https://xhamster.com/videos/vip4k-he-gave-her-money-and-fucked-her-in-front-of-her-boyfriend-xhf3rC3","https://xhamster.com/channels/vip4k"] },
+            { id: 16, title: "Brazzers", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/000/003/188/logo.jpg.v1533717764", siteUrls: ["https://xhamster.com/channels/brazzers","https://www.pornhub.org/channels/brazzers","https://www.xvideos.com/brazzers#_tabVideos"] },
+            { id: 16, title: "OopsFamily", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/144/681/384/logo.jpg.v1701422285", siteUrls: ["https://xhamster.com/channels/oops-family"] },
+            { id: 16, title: "FreeUse", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/160/412/300/logo.jpg.v1737391525", siteUrls: ["https://xhamster.com/channels/freeuse"] },
+            { id: 16, title: "NIKS INDIAN", category: "porn", imgUrl: "https://ic-vt-nss.xhpingcdn.com/a/ZjY3ZjFiOWYzYjZmNTk5NzlhZjU1MTg4MGNlZjQ4ZDU/s(w:1280,h:720),webp/023/868/288/1280x720.c.jpg.v1696866467", siteUrls: ["https://xhamster.com/channels/niks-indian","https://www.xvideos.com/?k=NIKS+INDIAN","https://wowuncut.com/tag/niks-indian","https://pornx11.com/category/niksindian/"] },
+            { id: 16, title: "Fill Up My Stepmom", category: "porn", imgUrl: "https://thumb-v-nss.xhpingcdn.com/site/155/100/192/logo.jpg.v1764841521", siteUrls: ["https://xhamster.com/channels/fill-up-my-stepmom"] },
+            { id: 16, title: "Hindi Uncut Films", category: "web series", imgUrl: "https://ahaaporn.com/wp-content/uploads/2026/06/Devar-Bhabhi.webp", siteUrls: ["https://wowuncut.com/tag/hindi-uncut-porn","https://ixiporn.live/?s=Uncut+Porn","https://hitmaal.tv/series/garmi/"] },
+            { id: 16, title: "Bhabhi", category: "web series", imgUrl: "https://wowmaal.net/wp-content/uploads/2026/06/cropped-WOWMaal-icon-180x180.png", siteUrls: ["https://uncutmaza.to/?s=bhabhi","https://ixiporn.live/?s=bhabhi","https://hmaal.co/?s=bhabhi"] },
+            { id: 16, title: "OTT", category: "web series", imgUrl: "https://hotullu.cc/wp-content/uploads/2025/11/cropped-HotUllu-New-180x180.png", siteUrls: ["https://dmaal.net/","https://hmaal.co/","https://zmaal.net/","https://ymaal.co/","https://uncutmaza.to/series/rasaleela/","https://maaltv.co/ott/","https://hotott.net/ott/","https://hdmaal.com.co/ott/"] },
+            { id: 16, title: "MMS", category: "mms", imgUrl: "https://aagmaal.hot/wp-content/uploads/2025/11/cropped-AAGMaal-192x192.png", siteUrls: ["https://goondesi.org/","https://lolpol2.com/","https://antarvasna.co/","https://www.kamababax.com/","https://desibabe.io/","https://desihub.to/","https://onlyhindisex.com/","https://www.fsiblogx.com/?asgtbndr=1"] },
+            { id: 16, title: "Screenshots", category: "web series", imgUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToN7LqygycdFrdzhEDub4ri8jTWGm1_4_6Ww&s", siteUrls: ["https://happy2hub.eu/adult-menu-a/"] }
+        ];
+
+        let currentCategory = 'All';
+        let filteredData = [...cardsData];
+        let itemsToLoad = 12; 
+        let currentRenderedCount = 0;
+        
+        let favoriteIds = JSON.parse(localStorage.getItem('hub_favorites')) || [];
+        const grid = document.getElementById('cardGrid');
+
+        function renderNextBatch() {
+            const nextBatch = filteredData.slice(currentRenderedCount, currentRenderedCount + itemsToLoad);
+            
+            nextBatch.forEach(card => {
+                const isFav = favoriteIds.includes(card.id);
+                const cardEl = document.createElement('div');
+                cardEl.className = 'card';
+                cardEl.onclick = () => openModal(card.siteUrls, card.title);
+
+                cardEl.innerHTML = `
+                    <button class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, ${card.id})">★</button>
+                    <img src="${card.imgUrl}" alt="${card.title}" loading="lazy">
+                    <div class="card-content">
+                        <div class="category-label">${card.category}</div>
+                        <div class="title">${card.title}</div>
+                    </div>
+                `;
+                grid.appendChild(cardEl);
+            });
+
+            currentRenderedCount += nextBatch.length;
+        }
+
+        function handleFilterChange() {
+            grid.innerHTML = '';
+            currentRenderedCount = 0;
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredData = cardsData.filter(card => {
+                const matchesSearch = card.title.toLowerCase().includes(searchText);
+                let matchesCategory = false;
+
+                if (currentCategory === 'All') matchesCategory = true;
+                else if (currentCategory === 'Favs') matchesCategory = favoriteIds.includes(card.id);
+                else matchesCategory = card.category === currentCategory;
+
+                return matchesSearch && matchesCategory;
+            });
+            renderNextBatch();
+        }
+
+        function filterCategory(category, btnElement) {
+            currentCategory = category;
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            handleFilterChange();
+        }
+
+        function toggleFavorite(event, id) {
+            event.stopPropagation(); 
+            if (favoriteIds.includes(id)) {
+                favoriteIds = favoriteIds.filter(favId => favId !== id);
+                event.target.classList.remove('active');
+            } else {
+                favoriteIds.push(id);
+                event.target.classList.add('active');
+            }
+            localStorage.setItem('hub_favorites', JSON.stringify(favoriteIds));
+            if (currentCategory === 'Favs') handleFilterChange();
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeBtn = document.getElementById('themeToggle');
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                themeBtn.innerText = "☀️ Light Mode";
+                localStorage.setItem('hub_theme', 'dark');
+            } else {
+                themeBtn.innerText = "🌙 Dark Mode";
+                localStorage.setItem('hub_theme', 'light');
+            }
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && currentRenderedCount < filteredData.length) {
+                renderNextBatch();
+            }
+        }, { threshold: 1.0 });
+
+        observer.observe(document.getElementById('sentinel'));
+
+        const modalOverlay = document.getElementById('myModal');
+        const webFrame = document.getElementById('webFrame');
+        const modalContent = document.getElementById('modalContent');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalServersContainer = document.getElementById('modalServersContainer');
+        const openNewTabBtn = document.getElementById('openNewTabBtn');
+
+        function openModal(urlsArray, title) {
+            modalTitle.innerText = title;
+            modalServersContainer.innerHTML = ''; 
+            
+            if (urlsArray && urlsArray.length > 0) {
+                if (urlsArray.length > 1) {
+                    urlsArray.forEach((url, index) => {
+                        const btn = document.createElement('button');
+                        btn.className = `server-btn ${index === 0 ? 'active' : ''}`;
+                        btn.innerText = `Site ${index + 1}`;
+                        
+                        btn.onclick = () => switchSite(url, btn);
+                        modalServersContainer.appendChild(btn);
+                    });
+                }
+                
+                webFrame.src = urlsArray[0];
+                openNewTabBtn.href = urlsArray[0]; 
+                openNewTabBtn.style.display = 'inline-block'; 
+                
+            } else {
+                webFrame.src = ""; 
+                openNewTabBtn.style.display = 'none'; 
+            }
+
+            modalOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function switchSite(url, clickedBtn) {
+            webFrame.src = url; 
+            openNewTabBtn.href = url; 
+
+            const allBtns = document.querySelectorAll('#modalServersContainer .server-btn');
+            allBtns.forEach(btn => btn.classList.remove('active'));
+            clickedBtn.classList.add('active');
+        }
+
+        function closeModal() {
+            webFrame.src = ''; 
+            modalOverlay.classList.remove('show');
+            document.body.style.overflow = 'auto'; 
+            
+            modalContent.classList.remove('is-fullscreen');
+            document.querySelector('.btn-fullscreen').innerHTML = "⛶ Full Screen";
+            
+            if (document.fullscreenElement) document.exitFullscreen();
+        }
+
+        function toggleFullScreen() {
+            const btn = document.querySelector('.btn-fullscreen');
+            
+            modalContent.classList.toggle('is-fullscreen');
+            
+            if (modalContent.classList.contains('is-fullscreen')) {
+                btn.innerHTML = "⛶ Exit Full Screen";
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch((err) => console.log(err));
+                }
+            } else {
+                btn.innerHTML = "⛶ Full Screen";
+                if (document.fullscreenElement && document.exitFullscreen) {
+                    document.exitFullscreen().catch((err) => console.log(err));
+                }
+            }
+        }
+
+        window.onload = () => {
+            if (localStorage.getItem('hub_theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeToggle').innerText = "☀️ Light Mode";
+            }
+            handleFilterChange(); 
+        };
+    </script>
+</body>
+</html>
