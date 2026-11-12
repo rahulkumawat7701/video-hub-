@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Car Documents</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- HEIC to JPEG Converter Library -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-800 text-white p-4 shadow-md">
+        <div class="container mx-auto flex items-center gap-3">
+            <i class="fa-solid fa-car text-2xl"></i>
+            <h1 class="text-xl font-bold">My Car Documents</h1>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-4 mt-6">
+        <div id="loading" class="text-center text-gray-500 text-lg py-10">
+            <i class="fa-solid fa-spinner fa-spin text-3xl mb-2"></i>
+            <p>डॉक्यूमेंट्स लोड हो रहे हैं...</p>
+        </div>
+
+        <div id="docs-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden">
+            <!-- Cards -->
+        </div>
+    </div>
+
+    <!-- Popup Modal -->
+    <div id="document-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75 flex justify-center items-center backdrop-blur-sm p-4 sm:p-8">
+        <!-- Modal Box (Added ID for Fullscreen) -->
+        <div id="modal-box" class="bg-white w-full max-w-4xl h-[85vh] rounded-lg shadow-2xl flex flex-col relative overflow-hidden transition-all duration-300">
+            
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center bg-gray-100 p-4 border-b border-gray-300">
+                <h3 id="modal-title" class="text-lg font-bold text-gray-800 truncate pr-4">Document Name</h3>
+                
+                <!-- Action Buttons: Full Screen & Close -->
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleFullScreen()" class="text-gray-600 hover:text-blue-600 transition-colors" title="Full Screen">
+                        <i id="fullscreen-icon" class="fa-solid fa-expand text-xl"></i>
+                    </button>
+                    <button onclick="closeModal()" class="text-gray-600 hover:text-red-600 transition-colors" title="Close">
+                        <i class="fa-solid fa-xmark text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Modal Body (Custom Viewer) -->
+            <div id="viewer-container" class="flex-grow w-full h-full bg-gray-200 flex justify-center items-center relative">
+                <!-- Data will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = 'AIzaSyDkqillAPWjvtWobJEURtLENYE4zFM_ZEc'; 
+        const FOLDER_ID = '11gmIeOlBe6KHHXKWXuvtSHmbNABdpCEn';
+        
+        const docsGrid = document.getElementById('docs-grid');
+        const loading = document.getElementById('loading');
+        const modal = document.getElementById('document-modal');
+        const modalBox = document.getElementById('modal-box');
+        const modalTitle = document.getElementById('modal-title');
+        const viewerContainer = document.getElementById('viewer-container');
+        const fsIcon = document.getElementById('fullscreen-icon');
+        
+        let currentObjectUrl = null; 
+
+        // Fetch files from Google Drive
+        async function fetchDocuments() {
+            const query = encodeURIComponent(`'${FOLDER_ID}' in parents and trashed=false`);
+            const url = `https://www.googleapis.com/drive/v3/files?q=${query}&key=${API_KEY}&fields=files(id,name,mimeType)`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.error) {
+                    loading.innerHTML = `<p class="text-red-500">Error: ${data.error.message}</p>`;
+                    return;
+                }
+
+                const files = data.files;
+                if (files && files.length > 0) {
+                    renderCards(files);
+                } else {
+                    loading.innerHTML = `<p class="text-gray-500">फोल्डर में कोई डॉक्यूमेंट नहीं मिला।</p>`;
+                }
+            } catch (error) {
+                loading.innerHTML = `<p class="text-red-500">डेटा लोड करने में समस्या आई।</p>`;
+            }
+        }
+
+        // Create HTML Cards
+        function renderCards(files) {
+            loading.classList.add('hidden');
+            docsGrid.classList.remove('hidden');
+            docsGrid.innerHTML = ''; 
+
+            files.forEach(file => {
+                let iconClass = 'fa-file-alt text-gray-500';
+                if (file.mimeType.includes('pdf')) {
+                    iconClass = 'fa-file-pdf text-red-500';
+                } else if (file.mimeType.includes('image') || file.name.toLowerCase().endsWith('.heic')) {
+                    iconClass = 'fa-file-image text-blue-500';
+                }
+
+                const cleanName = file.name.replace(/\.[^/.]+$/, "");
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col group";
+
+                card.innerHTML = `
+                    <div class="p-6 flex flex-col items-center text-center gap-3 w-full cursor-pointer" onclick="openModal('${file.id}', '${cleanName}', '${file.mimeType}', '${file.name}')">
+                        <i class="fa-solid ${iconClass} text-5xl group-hover:scale-110 transition-transform duration-300"></i>
+                        <h2 class="text-md font-semibold text-gray-800 line-clamp-2">${cleanName}</h2>
+                    </div>
+                    
+                    <div class="flex border-t border-gray-100 mt-auto">
+                        <button onclick="openModal('${file.id}', '${cleanName}', '${file.mimeType}', '${file.name}')" class="flex-1 bg-blue-50 py-3 text-blue-700 font-medium text-sm hover:bg-blue-600 hover:text-white transition-colors duration-300">
+                            <i class="fa-regular fa-eye mr-1"></i> View
+                        </button>
+                        <a href="https://drive.google.com/uc?export=download&id=${file.id}" target="_blank" class="flex-1 bg-gray-50 py-3 text-gray-700 font-medium text-sm hover:bg-green-600 hover:text-white border-l border-gray-200 transition-colors duration-300 text-center flex items-center justify-center">
+                            <i class="fa-solid fa-download mr-1"></i> Download
+                        </a>
+                    </div>
+                `;
+                docsGrid.appendChild(card);
+            });
+        }
+
+        // Open Popup Modal
+        async function openModal(fileId, fileName, mimeType, fullName) {
+            modalTitle.innerText = fileName;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; 
+            
+            viewerContainer.innerHTML = `
+                <div class="flex flex-col items-center justify-center text-gray-500">
+                    <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-3"></i>
+                    <p class="font-medium">फाइल तैयार की जा रही है...</p>
+                </div>
+            `;
+
+            try {
+                const fileUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${API_KEY}`;
+                const response = await fetch(fileUrl);
+                
+                if (!response.ok) throw new Error("Could not fetch file");
+
+                let blob = await response.blob();
+                const isHeic = mimeType.toLowerCase().includes('heic') || fullName.toLowerCase().endsWith('.heic');
+                const isImage = mimeType.includes('image') || fullName.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/);
+                const isPdf = mimeType.includes('pdf') || fullName.toLowerCase().endsWith('.pdf');
+
+                // HEIC Conversion Logic
+                if (isHeic) {
+                    viewerContainer.innerHTML = `
+                        <div class="flex flex-col items-center justify-center text-gray-500 text-center px-4">
+                            <i class="fa-solid fa-gear fa-spin text-4xl mb-3 text-blue-500"></i>
+                            <p class="font-medium">iPhone (HEIC) इमेज को प्रोसेस किया जा रहा है...<br><span class="text-sm">इसमें कुछ सेकंड लग सकते हैं</span></p>
+                        </div>
+                    `;
+                    // Convert HEIC to JPEG
+                    const convertedBlob = await heic2any({
+                        blob: blob,
+                        toType: "image/jpeg",
+                        quality: 0.8
+                    });
+                    blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                }
+                
+                if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+                currentObjectUrl = URL.createObjectURL(blob);
+
+                // Display Logic
+                if (isImage || isHeic) {
+                    viewerContainer.innerHTML = `<img src="${currentObjectUrl}" class="max-w-full max-h-full object-contain p-4 shadow-sm" alt="${fileName}">`;
+                } else if (isPdf) {
+                    viewerContainer.innerHTML = `<iframe src="${currentObjectUrl}#toolbar=0" class="w-full h-full border-none bg-white"></iframe>`;
+                } else {
+                    viewerContainer.innerHTML = `<p class="text-gray-600 font-medium text-center px-4">यह फाइल फॉर्मेट वेब व्यूअर में सपोर्टेड नहीं है।<br>कृपया डाउनलोड बटन का उपयोग करें।</p>`;
+                }
+            } catch (error) {
+                viewerContainer.innerHTML = `<p class="text-red-500 font-medium text-center px-4">फाइल लोड करने में एरर आई।<br>हो सकता है फाइल साइज़ बहुत बड़ा हो।</p>`;
+            }
+        }
+
+        // Close Popup Modal
+        function closeModal() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen(); // Exit fullscreen if active
+            }
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto'; 
+            viewerContainer.innerHTML = ''; 
+            if (currentObjectUrl) {
+                URL.revokeObjectURL(currentObjectUrl);
+                currentObjectUrl = null;
+            }
+        }
+
+        // Full Screen Toggle Logic
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                modalBox.requestFullscreen().catch(err => {
+                    alert(`Full-screen error: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Watch for Fullscreen changes to update Icon and padding
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                fsIcon.classList.replace('fa-expand', 'fa-compress');
+                modalBox.classList.replace('h-[85vh]', 'h-screen');
+                modalBox.classList.replace('rounded-lg', 'rounded-none');
+            } else {
+                fsIcon.classList.replace('fa-compress', 'fa-expand');
+                modalBox.classList.replace('h-screen', 'h-[85vh]');
+                modalBox.classList.replace('rounded-none', 'rounded-lg');
+            }
+        });
+
+        // Close modal when clicking outside the box
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Initialize App
+        fetchDocuments();
+    </script>
+</body>
+</html>
