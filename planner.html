@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>यात्रा खर्च योजना</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap">
+<style>
+:root{
+  --bg:#eef2f8; --surface:#ffffff; --surface2:#f4f7fb; --ink:#0b1b33; --muted:#5a6b84; --line:#d9e1ed;
+  --accent:#0a7f9b; --accent-ink:#ffffff; --accent-soft:#e0f3f8;
+  --hero:#0b1b33; --hero-ink:#eaf2ff; --hero-muted:#9fb3d1;
+  --c-petrol:#0a8fb0; --c-hotel:#5b5fd6; --c-food:#e49a0c; --c-other:#d6407f;
+  --t-day:#0a8fb0; --t-wk:#5b5fd6; --t-n2:#e49a0c; --t-long:#dc3a52; --t-xl:#7c3aed;
+  --warn:#b45309; --shadow:0 1px 2px rgba(11,27,51,.06),0 8px 24px rgba(11,27,51,.07);
+  --f-display:'Sora','Mukta',system-ui,sans-serif; --f-body:'Mukta',system-ui,-apple-system,'Segoe UI',sans-serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#08111f; --surface:#0f1b30; --surface2:#142340; --ink:#e6eefb; --muted:#93a6c4; --line:#22365a;
+  --accent:#27d3ee; --accent-ink:#04202a; --accent-soft:#0f3140;
+  --hero:#0c1a31; --hero-ink:#eaf2ff; --hero-muted:#9fb3d1;
+  --c-petrol:#27c1e0; --c-hotel:#8f93f5; --c-food:#f5b53a; --c-other:#f27aa9;
+  --t-day:#27c1e0; --t-wk:#8f93f5; --t-n2:#f5b53a; --t-long:#f4728a; --t-xl:#b794f6;
+  --warn:#f5b53a; --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.35); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#08111f; --surface:#0f1b30; --surface2:#142340; --ink:#e6eefb; --muted:#93a6c4; --line:#22365a;
+  --accent:#27d3ee; --accent-ink:#04202a; --accent-soft:#0f3140;
+  --hero:#0c1a31; --hero-ink:#eaf2ff; --hero-muted:#9fb3d1;
+  --c-petrol:#27c1e0; --c-hotel:#8f93f5; --c-food:#f5b53a; --c-other:#f27aa9;
+  --t-day:#27c1e0; --t-wk:#8f93f5; --t-n2:#f5b53a; --t-long:#f4728a; --t-xl:#b794f6;
+  --warn:#f5b53a; --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.35); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;padding-inline:16px;padding-block:16px 130px}
+.wrap{max-width:1240px;margin-inline:auto;display:flex;flex-direction:column;gap:18px}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.num{font-family:var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+.hero{background:var(--hero);color:var(--hero-ink);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:20px;
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:28px 28px}
+.hero .row{display:flex;gap:16px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+.hero h1{font-family:var(--f-display);font-weight:700;font-size:clamp(1.5rem,4vw,2.3rem);line-height:1.25;margin:0;text-wrap:balance}
+.hero p{margin:6px 0 0;color:var(--hero-muted);max-width:62ch}
+.theme{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:var(--hero-ink);border-radius:10px;padding:8px 14px;cursor:pointer;min-height:44px}
+.theme:hover{background:rgba(255,255,255,.16)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 14px;min-width:0}
+.kpi small{display:block;color:var(--hero-muted);font-size:.8rem;letter-spacing:.03em}
+.kpi b{display:block;font-family:var(--f-display);font-size:1.45rem;font-weight:600;line-height:1.3}
+.kpi span{display:block;color:var(--hero-muted);font-size:.82rem;overflow-wrap:anywhere}
+
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
+@media(min-width:901px){.panel{position:sticky;top:16px}}
+.panel h2{font-family:var(--f-display);font-weight:600;font-size:1rem;margin:0}
+.ctl{display:flex;flex-direction:column;gap:2px}
+.ctl label{display:flex;justify-content:space-between;gap:8px;font-weight:600;font-size:.92rem}
+.ctl output{color:var(--accent);font-weight:700}
+.ctl .hint{font-size:.78rem;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--accent);min-height:30px}
+.rate{background:var(--accent-soft);border-radius:12px;padding:10px 12px;font-size:.9rem;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.rate b{color:var(--accent);font-size:1.1rem}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);cursor:pointer;font-size:1.2rem}
+.stepper button:hover{border-color:var(--accent)}
+.stepper output{min-width:2ch;text-align:center;font-size:1.2rem;font-weight:700}
+.btn{border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:8px 14px;cursor:pointer;min-height:42px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+
+.main{display:flex;flex-direction:column;gap:14px;min-width:0}
+.bar{display:flex;gap:10px;flex-wrap:wrap}
+.bar input[type=search],.bar select{flex:1 1 200px;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-height:44px}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:9px 14px;cursor:pointer;min-height:44px}
+.seg button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);font-weight:700}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;cursor:pointer;min-height:40px;display:flex;align-items:center;gap:7px}
+.tab i{width:9px;height:9px;border-radius:50%;display:block}
+.tab[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft);font-weight:700}
+.tab em{font-style:normal;color:var(--muted);font-size:.85em}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0;transition:transform .15s,box-shadow .15s,border-color .15s}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.card.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.card .head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.card h3{margin:0;font-size:1.05rem;line-height:1.35;font-weight:700;overflow-wrap:anywhere}
+.chip{font-size:.74rem;border-radius:999px;padding:2px 10px;white-space:nowrap;font-weight:600;color:var(--ink);background:var(--surface2);border:1px solid var(--line);display:inline-flex;align-items:center;gap:6px}
+.chip i{width:8px;height:8px;border-radius:50%;display:block}
+.total{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.total b{font-family:var(--f-display);font-weight:700;font-size:1.55rem}
+.total span{font-size:.84rem;color:var(--muted)}
+.split{display:flex;height:8px;border-radius:99px;overflow:hidden;background:var(--surface2)}
+.split i{display:block;height:100%}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:.84rem;margin:0;padding:0;list-style:none}
+.legend li{display:flex;justify-content:space-between;gap:6px;min-width:0}
+.legend li>span:first-child{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;display:block}
+.foot{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
+.foot .btn{flex:1 1 auto;padding:6px 10px;min-height:38px;font-size:.9rem}
+.foot .btn.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.empty{padding:32px 16px;text-align:center;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:14px}
+
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:.92rem}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+td.r,th.r{text-align:right}
+th{background:var(--surface2);font-weight:700;position:sticky;top:0}
+th button{border:0;background:none;cursor:pointer;font-weight:700;padding:0}
+th button:hover{color:var(--accent)}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--accent-soft)}
+td.name{white-space:normal;min-width:180px;font-weight:600}
+td.sel{color:var(--accent);font-weight:700}
+
+.chartbox{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;position:relative}
+.chartbox h3{margin:0 0 2px;font-family:var(--f-display);font-size:1rem}
+.chartbox p{margin:0 0 8px;color:var(--muted);font-size:.86rem}
+.chartbox svg{width:100%;height:auto;display:block}
+.axis text{fill:var(--muted);font-size:11px;font-family:var(--f-body)}
+.axis line,.gridl{stroke:var(--line)}
+.pt{cursor:pointer;stroke:var(--surface);stroke-width:2;transition:r .12s}
+.pt:hover,.pt:focus{r:9}
+.pt.sel{stroke:var(--ink);stroke-width:3}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:8px;padding:6px 10px;font-size:.84rem;z-index:3;max-width:220px}
+.legendrow{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:.84rem;color:var(--muted)}
+.legendrow span{display:flex;align-items:center;gap:6px}
+
+details.notes{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 18px}
+details.notes summary{cursor:pointer;font-weight:700}
+details.notes ul{margin:10px 0 0;padding-left:20px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+details.notes li b{color:var(--ink)}
+
+.overlay{position:fixed;inset:0;background:rgba(5,12,24,.6);z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--surface);border:1px solid var(--line);border-radius:18px;width:min(560px,100%);max-height:calc(100% - 8px);overflow:auto;padding:20px;display:flex;flex-direction:column;gap:16px;box-shadow:var(--shadow)}
+.modal .mh{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.modal h2{margin:0;font-size:1.3rem;line-height:1.35}
+.x{border:1px solid var(--line);background:var(--surface2);border-radius:10px;width:40px;height:40px;cursor:pointer;flex:none}
+.mbody{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;align-items:center}
+@media(max-width:480px){.mbody{grid-template-columns:minmax(0,1fr);justify-items:center}.mbody .legend{width:100%}}
+.donut{position:relative;width:150px;height:150px}
+.donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+.donut div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2}
+.donut b{font-family:var(--f-display);font-size:1.05rem}
+.donut small{color:var(--muted);font-size:.72rem}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.fact{background:var(--surface2);border-radius:12px;padding:10px 12px;min-width:0}
+.fact small{display:block;color:var(--muted);font-size:.76rem}
+.fact b{font-family:var(--f-display);font-size:1rem;font-weight:600}
+.warn{font-size:.82rem;color:var(--warn);margin:0}
+
+.tray{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:2px solid var(--accent);box-shadow:0 -8px 28px rgba(0,0,0,.2);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));z-index:10}
+.tray .in{max-width:1240px;margin-inline:auto;display:flex;flex-direction:column;gap:10px}
+.tray .row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.tray .sum b{font-family:var(--f-display);font-size:1.4rem;color:var(--accent)}
+.tray .sum small{color:var(--muted)}
+.tray .acts{display:flex;gap:8px;flex-wrap:wrap}
+.tray ul{list-style:none;margin:0;padding:0;max-height:28vh;overflow:auto;display:flex;flex-direction:column;gap:2px;font-size:.9rem}
+.tray li{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding:4px 0}
+.tray li button{border:0;background:none;color:var(--c-other);cursor:pointer;padding:0 8px;min-height:28px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(100px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:10px;z-index:30;font-size:.9rem}
+.hero{position:relative;overflow:hidden;box-shadow:0 18px 50px rgba(10,127,155,.2)}
+.hero>*{position:relative;z-index:1}
+.hero::after{content:"";position:absolute;right:-80px;bottom:-120px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(39,211,238,.35),transparent 65%);pointer-events:none;animation:glow 7s ease-in-out infinite alternate}
+@keyframes glow{to{transform:translate(-40px,-30px) scale(1.15)}}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.97)}}
+.card{position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--tc,var(--accent))}
+.card:hover{transform:translateY(-4px)}
+.modal{animation:pop .25s ease}
+.modal.wide{width:min(760px,100%)}
+.badge{font-size:.78rem;font-weight:600;border-radius:8px;padding:3px 9px;display:inline-flex;width:fit-content;color:var(--ink)}
+.badge.ok{background:rgba(22,163,74,.18)}
+.badge.mid{background:rgba(217,119,6,.2)}
+.badge.bad{background:rgba(220,38,38,.2)}
+.chk{display:flex;gap:8px;align-items:center;font-size:.9rem;min-height:44px;cursor:pointer}
+.cmpbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--accent-soft);border:1px solid var(--accent);border-radius:12px;padding:10px 14px;animation:pop .25s}
+.cmpbar>span{flex:1 1 200px;font-size:.92rem}
+.cwrap{overflow-x:auto}
+table.ctable{min-width:0;font-size:.9rem}
+.ctable th,.ctable td{white-space:normal;text-align:center;padding:8px 6px;position:static;vertical-align:top}
+.ctable td:first-child{text-align:left;color:var(--muted)}
+.ctable td.best{color:var(--accent);font-weight:700}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="row">
+      <div>
+        <h1>यात्रा योजना व खर्च का विवरण</h1>
+        <p>किशनगढ़ रेनवाल से कार द्वारा 37 जगहें। रेट और ग्रुप का साइज बदलिए, खर्च तुरंत अपडेट होगा।</p>
+      </div>
+      <button class="theme" id="themeBtn" type="button" aria-label="थीम बदलें">थीम बदलें</button>
+    </div>
+    <div class="kpis" id="kpis" aria-live="polite"></div>
+  </header>
+
+  <div class="layout">
+    <aside class="panel" aria-label="खर्च की सेटिंग">
+      <h2>आपकी सेटिंग</h2>
+      <div class="ctl"><label>ग्रुप में कितने लोग</label>
+        <div class="stepper">
+          <button type="button" id="pMinus" aria-label="एक कम करें">−</button>
+          <output id="o-people" class="num" aria-live="polite"></output>
+          <button type="button" id="pPlus" aria-label="एक बढ़ाएं">+</button>
+        </div>
+        <span class="hint">हर यात्रा का प्रति व्यक्ति खर्च भी दिखेगा</span></div>
+      <div class="ctl"><label for="price">पेट्रोल रेट (₹/लीटर) <output id="o-price"></output></label>
+        <input type="range" id="price" min="80" max="120" step="1"></div>
+      <div class="ctl"><label for="mileage">कार का माइलेज (किमी/लीटर) <output id="o-mileage"></output></label>
+        <input type="range" id="mileage" min="8" max="25" step="1"></div>
+      <div class="rate"><span>पेट्रोल खर्च</span><b class="num" id="perkm"></b></div>
+      <div class="ctl"><label for="hotel">होटल (₹/रात, एक कमरा) <output id="o-hotel"></output></label>
+        <input type="range" id="hotel" min="800" max="6000" step="100"></div>
+      <div class="ctl"><label for="food">खाना (₹/दिन, पूरा ग्रुप) <output id="o-food"></output></label>
+        <input type="range" id="food" min="500" max="4000" step="100"></div>
+      <div class="ctl"><label for="max">बजट सीमा <output id="o-max"></output></label>
+        <input type="range" id="max" min="2000" max="150000" step="1000">
+        <span class="hint">इससे महंगी यात्राएं छिप जाएंगी</span></div>
+      <button class="btn" id="reset" type="button">सेटिंग वापस सामान्य करें</button>
+    </aside>
+
+    <main class="main">
+      <div class="bar">
+        <input type="search" id="q" placeholder="जगह खोजें, जैसे जयपुर, बालाजी, किला" aria-label="जगह खोजें">
+        <select id="sort" aria-label="क्रम">
+          <option value="cost-asc">सस्ती पहले</option>
+          <option value="cost-desc">महंगी पहले</option>
+          <option value="km-asc">पास की पहले</option>
+          <option value="km-desc">दूर की पहले</option>
+          <option value="name">नाम से</option>
+        </select>
+        <select id="month" aria-label="यात्रा का महीना"></select>
+        <label class="chk"><input type="checkbox" id="inS"> केवल सही मौसम</label>
+        <div class="seg" role="group" aria-label="व्यू">
+          <button type="button" data-v="cards" aria-pressed="true">कार्ड</button>
+          <button type="button" data-v="table" aria-pressed="false">टेबल</button>
+          <button type="button" data-v="chart" aria-pressed="false">चार्ट</button>
+        </div>
+      </div>
+      <div class="cmpbar" id="cmpbar" hidden></div>
+      <div class="tabs" id="tabs" role="group" aria-label="यात्रा का प्रकार"></div>
+      <div id="view"></div>
+    </main>
+  </div>
+</div>
+
+<div class="tray" id="tray" hidden>
+  <div class="in">
+    <div class="row">
+      <div class="sum"><small id="tCount"></small><br>कुल बजट <b class="num" id="tTotal"></b> <small id="tPer"></small></div>
+      <div class="acts">
+        <button class="btn" id="tToggle" type="button" aria-expanded="false">सूची देखें</button>
+        <button class="btn primary" id="tCopy" type="button">कॉपी करें</button>
+        <button class="btn" id="tClear" type="button">खाली करें</button>
+      </div>
+    </div>
+    <ul id="tList" hidden></ul>
+  </div>
+</div>
+
+<div class="overlay" id="ov" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" id="modal"></div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ow = रेनवाल से एक तरफ की अनुमानित दूरी (किमी), loc = स्थानीय घूमना/चक्कर (किमी), ni/da = रातें/दिन, ot = टिकट, पार्किंग, टोल, परमिट आदि (₹) */
+const TIERS={day:'एक दिन',wk:'वीकेंड',n2:'2 रात',long:'लंबी छुट्टी',xl:'बड़ी यात्रा'};
+const D=[
+{n:'ज्वाला माता, जोबनेर',t:'day',ow:25,loc:20,ni:0,da:1,ot:100,see:'ज्वाला माता मंदिर, जोबनेर किला'},
+{n:'सांभर झील व शाकंभरी माता',t:'day',ow:55,loc:20,ni:0,da:1,ot:200,see:'नमक की झील, शाकंभरी माता मंदिर'},
+{n:'खाटू श्याम जी व जीण माता',t:'day',ow:95,loc:40,ni:0,da:1,ot:500,see:'खाटू श्याम मंदिर, जीण माता, रेवासा की पहाड़ियां'},
+{n:'सामोद पैलेस',t:'day',ow:50,loc:10,ni:0,da:1,ot:1000,see:'सामोद पैलेस, सामोद बाग, हवेली'},
+{n:'जयपुर',t:'day',ow:65,loc:40,ni:0,da:1,ot:1000,see:'आमेर किला, हवा महल, सिटी पैलेस, बाजार'},
+{n:'हर्ष पर्वत व भैरू जी मंदिर',t:'day',ow:100,loc:20,ni:0,da:1,ot:200,see:'हर्ष पर्वत की चोटी, भैरू जी मंदिर'},
+{n:'किशनगढ़ किला व मार्बल डंपयार्ड',t:'day',ow:90,loc:20,ni:0,da:1,ot:400,see:'किशनगढ़ किला, गुंदोलाव झील, मार्बल डंपयार्ड'},
+{n:'सालासर बालाजी',t:'day',ow:130,loc:10,ni:0,da:1,ot:500,see:'सालासर बालाजी मंदिर, दर्शन व प्रसाद'},
+{n:'भानगढ़ किला व आभानेरी',t:'day',ow:150,loc:50,ni:0,da:1,ot:400,see:'भानगढ़ का किला, आभानेरी की चांद बावड़ी'},
+{n:'अजमेर दरगाह व पुष्कर',t:'wk',ow:100,loc:40,ni:1,da:2,ot:800,see:'ख्वाजा की दरगाह, पुष्कर सरोवर, ब्रह्मा मंदिर'},
+{n:'शेखावाटी',t:'wk',ow:150,loc:120,ni:1,da:2,ot:600,see:'मंडावा व फतेहपुर की हवेलियां, चित्रकारी'},
+{n:'सरिस्का व अलवर',t:'wk',ow:170,loc:70,ni:1,da:2,ot:3000,see:'सरिस्का सफारी, अलवर किला, सिलीसेढ़ झील'},
+{n:'मेहंदीपुर बालाजी',t:'wk',ow:170,loc:30,ni:1,da:2,ot:500,see:'मेहंदीपुर बालाजी मंदिर'},
+{n:'रणथंभौर',t:'wk',ow:230,loc:60,ni:1,da:2,ot:3700,see:'टाइगर सफारी, रणथंभौर किला, गणेश मंदिर'},
+{n:'भरतपुर व फतेहपुर सीकरी',t:'wk',ow:280,loc:50,ni:1,da:2,ot:1200,see:'केवलादेव पक्षी विहार, फतेहपुर सीकरी'},
+{n:'बूंदी व टोंक',t:'wk',ow:270,loc:80,ni:1,da:2,ot:600,see:'तारागढ़ किला, रानीजी की बावड़ी, टोंक'},
+{n:'सांवलिया सेठ व चित्तौड़गढ़',t:'wk',ow:330,loc:60,ni:1,da:2,ot:1000,see:'सांवलिया सेठ मंदिर, चित्तौड़गढ़ किला'},
+{n:'बीकानेर',t:'n2',ow:320,loc:40,ni:2,da:3,ot:800,see:'जूनागढ़ किला, करणी माता, भुजिया बाजार'},
+{n:'मथुरा व वृंदावन',t:'n2',ow:290,loc:40,ni:2,da:3,ot:1200,see:'कृष्ण जन्मभूमि, बांके बिहारी, प्रेम मंदिर'},
+{n:'जोधपुर',t:'n2',ow:280,loc:40,ni:2,da:3,ot:1500,see:'मेहरानगढ़ किला, उम्मेद भवन, घंटाघर बाजार'},
+{n:'कोटा',t:'n2',ow:290,loc:40,ni:2,da:3,ot:1200,see:'सिटी पैलेस, चंबल गार्डन, सेवन वंडर्स'},
+{n:'आगरा',t:'n2',ow:300,loc:50,ni:2,da:3,ot:2000,see:'ताजमहल, आगरा किला, मेहताब बाग'},
+{n:'नाथद्वारा व कुंभलगढ़',t:'n2',ow:360,loc:60,ni:2,da:3,ot:1600,see:'श्रीनाथ जी मंदिर, कुंभलगढ़ किला'},
+{n:'उदयपुर',t:'long',ow:380,loc:100,ni:3,da:4,ot:3400,see:'पिछोला झील, सिटी पैलेस, सज्जनगढ़'},
+{n:'माउंट आबू',t:'long',ow:460,loc:60,ni:3,da:4,ot:1200,see:'नक्की झील, दिलवाड़ा मंदिर, गुरु शिखर'},
+{n:'जैसलमेर',t:'long',ow:580,loc:150,ni:3,da:4,ot:4000,see:'सोनार किला, सम डेजर्ट, पटवों की हवेली'},
+{n:'उज्जैन व इंदौर',t:'long',ow:620,loc:120,ni:3,da:4,ot:2000,see:'महाकालेश्वर, राजवाड़ा, सराफा बाजार'},
+{n:'हरिद्वार व ऋषिकेश',t:'long',ow:580,loc:80,ni:4,da:5,ot:2100,see:'हर की पौड़ी, गंगा आरती, लक्ष्मण झूला'},
+/* नई जगहें */
+{n:'शिमला',t:'long',ow:650,loc:120,ni:4,da:5,ot:4500,see:'माल रोड, कुफरी, जाखू मंदिर, रिज'},
+{n:'नैनीताल',t:'long',ow:620,loc:150,ni:4,da:5,ot:4000,see:'नैनी झील, भीमताल, नौकुचियाताल, माल रोड'},
+{n:'चित्रकूट',t:'long',ow:780,loc:80,ni:4,da:5,ot:4500,see:'रामघाट, कामदगिरि परिक्रमा, गुप्त गोदावरी, हनुमान धारा'},
+{n:'खजुराहो',t:'long',ow:700,loc:100,ni:4,da:5,ot:4500,see:'पश्चिमी मंदिर समूह, लाइट एंड साउंड शो, पन्ना टाइगर रिजर्व'},
+{n:'मनाली',t:'xl',ow:850,loc:200,ni:6,da:7,ot:6000,see:'सोलांग घाटी, अटल टनल, हिडिंबा मंदिर, माल रोड'},
+{n:'रण ऑफ कच्छ',t:'xl',ow:1050,loc:250,ni:6,da:7,ot:6500,see:'सफेद रण (धोरडो), कालो डूंगर, भुज का आइना महल'},
+{n:'गोवा',t:'xl',ow:1600,loc:200,ni:7,da:8,ot:7000,see:'बागा-कलंगुट बीच, बेसिलिका ऑफ बॉम जीसस, अगुआड़ा किला, पणजी'},
+{n:'कश्मीर',t:'xl',ow:1100,loc:400,ni:8,da:9,ot:6500,see:'डल झील, गुलमर्ग, पहलगाम, सोनमर्ग'},
+{n:'लेह लद्दाख',t:'xl',ow:1350,loc:600,ni:10,da:11,ot:9000,see:'पैंगोंग झील, नुब्रा घाटी, खारदुंग ला, लेह पैलेस'}
+];
+const BM=[[10,3],[10,3],[10,3],[10,3],[10,3],[7,3],[10,3],[9,3],[7,3],[10,3],[10,3],[10,6],[10,3],[10,6],[11,2],[10,3],[10,3],[10,3],[10,3],[10,3],[10,3],[10,3],[9,3],[9,3],[10,6],[10,3],[10,3],[10,4],[3,6],[3,6],[10,3],[10,3],[3,6],[11,2],[11,3],[4,10],[6,9]];
+const ROAD={36:[11,12,1,2,3,4,5],35:[12,1,2],32:[1,2]};
+const MN=['जनवरी','फरवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर'];
+const ICON={day:'☀️',wk:'🧳',n2:'🚗',long:'🏔️',xl:'🗺️'};
+const inSeason=(i,m)=>{const[a,b]=BM[i];return a<=b?m>=a&&m<=b:m>=a||m<=b};
+const seasonTxt=i=>MN[BM[i][0]-1]+' से '+MN[BM[i][1]-1];
+function badge(i){const m=S.month;if(ROAD[i]&&ROAD[i].includes(m))return '<span class="badge bad">🚧 '+MN[m-1]+' में रास्ता बंद हो सकता है</span>';return inSeason(i,m)?'<span class="badge ok">✓ '+MN[m-1]+' में सही समय</span>':'<span class="badge mid">⚠ '+MN[m-1]+' में मौसम ठीक नहीं</span>'}
+const DEF={price:112,mileage:16,hotel:1300,food:1200,max:150000,people:4};
+const MAXV=150000;
+const P=Object.assign({},DEF);
+const S={tab:'all',q:'',sort:'cost-asc',view:'cards',sel:new Set(),open:-1,tsort:'cost',tdir:1};
+S.month=new Date().getMonth()+1;S.inS=false;S.cmp=new Set();S.cmpOpen=false;
+const $=id=>document.getElementById(id);
+const inr=v=>'₹'+Math.round(v).toLocaleString('en-IN');
+const COL=[['petrol','पेट्रोल','--c-petrol'],['hotel','होटल','--c-hotel'],['food','खाना','--c-food'],['other','अन्य','--c-other']];
+const TC={day:'--t-day',wk:'--t-wk',n2:'--t-n2',long:'--t-long',xl:'--t-xl'};
+
+const perKm=()=>P.price/P.mileage;
+function calc(d){
+  const km=2*d.ow+d.loc;
+  const petrol=Math.round(km*perKm()/10)*10;
+  const hotel=d.ni*P.hotel, food=d.da*P.food, other=d.ot;
+  const total=petrol+hotel+food+other;
+  return {km,petrol,hotel,food,other,total,per:total/P.people,litres:km/P.mileage,hrs:d.ow/55};
+}
+function visible(){
+  const q=S.q.trim();
+  const list=D.map((d,i)=>({d,i,c:calc(d)})).filter(x=>
+    (S.tab==='all'||x.d.t===S.tab)&&(P.max>=MAXV||x.c.total<=P.max)&&(!S.inS||(inSeason(x.i,S.month)&&!(ROAD[x.i]&&ROAD[x.i].includes(S.month))))&&(!q||(x.d.n+' '+x.d.see).includes(q)));
+  const s=S.view==='table'?(S.tsort+(S.tdir>0?'-asc':'-desc')):S.sort;
+  const cmp={'cost-asc':(a,b)=>a.c.total-b.c.total,'cost-desc':(a,b)=>b.c.total-a.c.total,
+    'km-asc':(a,b)=>a.c.km-b.c.km,'km-desc':(a,b)=>b.c.km-a.c.km,
+    'name-asc':(a,b)=>a.d.n.localeCompare(b.d.n,'hi'),'name-desc':(a,b)=>b.d.n.localeCompare(a.d.n,'hi'),
+    'name':(a,b)=>a.d.n.localeCompare(b.d.n,'hi'),
+    'per-asc':(a,b)=>a.c.per-b.c.per,'per-desc':(a,b)=>b.c.per-a.c.per,
+    'days-asc':(a,b)=>a.d.da-b.d.da,'days-desc':(a,b)=>b.d.da-a.d.da}[s];
+  return list.sort(cmp);
+}
+const stayTxt=d=>d.ni?`${d.ni} रात, ${d.da} दिन`:'उसी दिन वापसी';
+
+function renderCards(list,maxT){
+  return list.length?`<div class="grid">`+list.map(({d,i,c})=>{
+    const w=c.total/maxT*100;
+    const seg=COL.map(([k,,v])=>c[k]?`<i style="width:${c[k]/c.total*w}%;background:var(${v})"></i>`:'').join('');
+    const leg=COL.map(([k,l,v])=>`<li><span><span class="dot" style="background:var(${v})"></span>${l}</span><span class="num">${inr(c[k])}</span></li>`).join('');
+    const on=S.sel.has(i);
+    return `<article class="card${on?' sel':''}" style="--tc:var(${TC[d.t]})">
+      <div class="head"><h3>${d.n}</h3><span class="chip">${ICON[d.t]} ${TIERS[d.t]}</span></div>
+      <div class="total"><b class="num">${inr(c.total)}</b><span>${inr(c.per)} प्रति व्यक्ति</span></div>
+      <div class="split" role="img" aria-label="खर्च का बंटवारा">${seg}</div>
+      <ul class="legend">${leg}</ul>
+      <span class="hint" style="font-size:.82rem;color:var(--muted)">~${d.ow} किमी एक तरफ · ${stayTxt(d)}<br>सर्वोत्तम समय: ${seasonTxt(i)}</span>${badge(i)}
+      <div class="foot"><button class="btn" type="button" data-open="${i}">विवरण</button>
+      <button class="btn${S.cmp.has(i)?' on':''}" type="button" data-cmp="${i}" aria-pressed="${S.cmp.has(i)}">⚖ तुलना</button><button class="btn${on?' on':''}" type="button" data-pick="${i}" aria-pressed="${on}">${on?'योजना में है':'योजना में जोड़ें'}</button></div>
+    </article>`}).join('')+`</div>`
+    :'<div class="empty">इस बजट या खोज में कोई यात्रा नहीं मिली। बजट सीमा बढ़ाएं या खोज बदलें।</div>';
+}
+function renderTable(list){
+  if(!list.length)return '<div class="empty">इस बजट या खोज में कोई यात्रा नहीं मिली।</div>';
+  const th=(k,l,r)=>`<th class="${r?'r':''}" aria-sort="${S.tsort===k?(S.tdir>0?'ascending':'descending'):'none'}"><button type="button" data-ts="${k}">${l}${S.tsort===k?(S.tdir>0?' ▲':' ▼'):''}</button></th>`;
+  return `<div class="tablewrap"><table><thead><tr>${th('name','जगह')}<th>प्रकार</th>${th('days','ठहराव')}${th('km','आना-जाना',1)}<th class="r">पेट्रोल</th><th class="r">होटल</th><th class="r">खाना</th><th class="r">अन्य</th>${th('cost','कुल',1)}${th('per','प्रति व्यक्ति',1)}<th>योजना</th></tr></thead><tbody>`+
+  list.map(({d,i,c})=>`<tr data-open="${i}" tabindex="0"><td class="name">${d.n}</td><td>${TIERS[d.t]}</td><td>${stayTxt(d)}</td><td class="r num">${c.km} किमी</td><td class="r num">${inr(c.petrol)}</td><td class="r num">${inr(c.hotel)}</td><td class="r num">${inr(c.food)}</td><td class="r num">${inr(c.other)}</td><td class="r num"><b>${inr(c.total)}</b></td><td class="r num">${inr(c.per)}</td><td class="${S.sel.has(i)?'sel':''}">${S.sel.has(i)?'चुनी हुई':'-'}</td></tr>`).join('')+`</tbody></table></div>`;
+}
+function renderChart(list){
+  const W=800,H=420,L=64,R=20,T=16,B=48;
+  const all=D.map(calc);
+  const mk=Math.max(...all.map(c=>c.km)), mt=Math.max(...all.map(c=>c.total));
+  const xs=mk>1600?400:200, ys=mt>40000?10000:5000;
+  const xm=Math.ceil(mk/xs)*xs, ym=Math.ceil(mt/ys)*ys;
+  const X=v=>L+v/xm*(W-L-R), Y=v=>H-B-v/ym*(H-T-B);
+  let g='';
+  for(let v=0;v<=ym;v+=ys){g+=`<line class="gridl" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end">${v/1000}k</text>`}
+  for(let v=0;v<=xm;v+=xs){g+=`<line class="gridl" x1="${X(v)}" x2="${X(v)}" y1="${T}" y2="${H-B}"/><text x="${X(v)}" y="${H-B+18}" text-anchor="middle">${v}</text>`}
+  const ids=new Set(list.map(x=>x.i));
+  const pts=D.map((d,i)=>{const c=all[i];if(!ids.has(i))return '';
+    return `<circle class="pt${S.sel.has(i)?' sel':''}" r="7" cx="${X(c.km)}" cy="${Y(c.total)}" fill="var(${TC[d.t]})" tabindex="0" role="button" data-open="${i}" data-tip="${i}" aria-label="${d.n}, ${inr(c.total)}"/>`}).join('');
+  const lg=Object.entries(TIERS).map(([k,l])=>`<span><i class="dot" style="background:var(${TC[k]})"></i>${l}</span>`).join('');
+  return `<div class="chartbox"><h3>दूरी बनाम कुल खर्च</h3><p>हर बिंदु एक यात्रा है। ऊपर और दाईं तरफ के बिंदु ज्यादा दूर और महंगे हैं। बिंदु पर क्लिक करके विवरण देखें।</p>
+  <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="दूरी और खर्च का चार्ट"><g class="axis">${g}
+  <text x="${(L+W-R)/2}" y="${H-6}" text-anchor="middle">आना-जाना कुल किमी</text>
+  <text transform="translate(14 ${(T+H-B)/2}) rotate(-90)" text-anchor="middle">कुल खर्च (₹)</text></g>${pts}</svg>
+  <div class="legendrow">${lg}</div><div class="tip" id="tip" hidden></div></div>`;
+}
+function render(){
+  $('perkm').textContent='₹'+perKm().toFixed(1)+' / किमी';
+  $('o-people').textContent=P.people;
+  [['price'],['mileage'],['hotel'],['food'],['max']].forEach(([k])=>{
+    const v=P[k];
+    $('o-'+k).textContent=k==='mileage'?v+' किमी/ली':k==='max'&&v>=MAXV?'कोई सीमा नहीं':inr(v);
+  });
+  const list=visible();
+  const maxT=Math.max(...D.map(d=>calc(d).total));
+  const counts={all:D.length};Object.keys(TIERS).forEach(t=>counts[t]=D.filter(d=>d.t===t).length);
+  $('tabs').innerHTML=[['all','सभी'],...Object.entries(TIERS)].map(([k,l])=>
+    `<button class="tab" type="button" data-t="${k}" aria-pressed="${S.tab===k}">${k!=='all'?ICON[k]+' ':''}${l}<em>${counts[k]}</em></button>`).join('');
+  if(list.length){
+    const mn=list.reduce((a,b)=>a.c.total<=b.c.total?a:b), far=list.reduce((a,b)=>a.c.km>=b.c.km?a:b);
+    const avg=list.reduce((a,b)=>a+b.c.total,0)/list.length;
+    $('kpis').innerHTML=
+     `<div class="kpi"><small>दिख रही यात्राएं</small><b>${list.length} / ${D.length}</b><span>चुने फ़िल्टर में</span></div>
+      <div class="kpi"><small>सबसे सस्ती</small><b>${inr(mn.c.total)}</b><span>${mn.d.n}</span></div>
+      <div class="kpi"><small>औसत खर्च</small><b>${inr(avg)}</b><span>${inr(avg/P.people)} प्रति व्यक्ति</span></div>
+      <div class="kpi"><small>सबसे दूर</small><b>${far.c.km} किमी</b><span>${far.d.n}</span></div>`;
+  } else $('kpis').innerHTML='<div class="kpi"><small>कोई यात्रा नहीं</small><b>0</b><span>बजट या खोज बदलें</span></div>';
+  $('view').innerHTML=S.view==='cards'?renderCards(list,maxT):S.view==='table'?renderTable(list):renderChart(list);
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===S.view));
+  $('sort').disabled=S.view==='table';
+  renderTray();
+  renderCmpBar();if(S.open>=0)renderModal();else if(S.cmpOpen)renderCompare();
+}
+function renderTray(){
+  const ids=[...S.sel].sort((a,b)=>a-b);
+  $('tray').hidden=!ids.length;
+  if(!ids.length)return;
+  const items=ids.map(i=>({i,d:D[i],c:calc(D[i])}));
+  const tot=items.reduce((a,x)=>a+x.c.total,0);
+  $('tCount').textContent=ids.length+' यात्रा चुनी';
+  $('tTotal').textContent=inr(tot);
+  $('tPer').textContent='('+inr(tot/P.people)+' प्रति व्यक्ति)';
+  $('tList').innerHTML=items.map(x=>`<li><span>${x.d.n}</span><span><span class="num">${inr(x.c.total)}</span><button type="button" data-rm="${x.i}" aria-label="${x.d.n} हटाएं">✕</button></span></li>`).join('');
+}
+let lastFocus=null;
+function renderModal(){
+  const d=D[S.open],c=calc(d),on=S.sel.has(S.open);
+  const R=40,C=2*Math.PI*R;let off=0;
+  const arcs=COL.map(([k,,v])=>{const f=c[k]/c.total*C;const s=`<circle cx="50" cy="50" r="${R}" fill="none" stroke="var(${v})" stroke-width="14" stroke-dasharray="${f} ${C-f}" stroke-dashoffset="${-off}"/>`;off+=f;return s}).join('');
+  const leg=COL.map(([k,l,v])=>`<li><span><span class="dot" style="background:var(${v})"></span>${l}</span><span class="num">${inr(c[k])} <small style="color:var(--muted)">${Math.round(c[k]/c.total*100)}%</small></span></li>`).join('');
+  $('modal').innerHTML=`
+   <div class="mh"><div><span class="chip"><i style="background:var(${TC[d.t]})"></i>${TIERS[d.t]}</span><h2 id="mTitle">${d.n}</h2><p style="margin:2px 0 0;color:var(--muted)">${d.see}</p></div>
+   <button class="x" type="button" id="mClose" aria-label="बंद करें">✕</button></div>
+   <div class="mbody"><div class="donut"><svg viewBox="0 0 100 100" role="img" aria-label="खर्च का बंटवारा">${arcs}</svg><div><b>${inr(c.total)}</b><small>कुल खर्च</small></div></div>
+   <ul class="legend" style="grid-template-columns:1fr;gap:8px;font-size:.95rem">${leg}</ul></div>
+   <div class="facts">
+    <div class="fact"><small>प्रति व्यक्ति (${P.people} लोग)</small><b>${inr(c.per)}</b></div>
+    <div class="fact"><small>एक तरफ की दूरी</small><b>~${d.ow} किमी</b></div>
+    <div class="fact"><small>आना-जाना कुल</small><b>${c.km} किमी</b></div>
+    <div class="fact"><small>एक तरफ का समय</small><b>~${c.hrs.toFixed(1)} घंटे</b></div>
+    <div class="fact"><small>पेट्रोल की जरूरत</small><b>~${c.litres.toFixed(0)} लीटर</b></div>
+    <div class="fact"><small>ठहराव</small><b>${stayTxt(d)}</b></div><div class="fact"><small>सर्वोत्तम समय</small><b>${seasonTxt(S.open)}</b></div></div>${badge(S.open)}
+   <p class="warn">दूरी, समय और टिकट का खर्च अंदाजा है। निकलने से पहले गूगल मैप्स पर जांच लें।</p>
+   <button class="btn ${on?'':'primary'}" type="button" id="mPick">${on?'योजना से हटाएं':'योजना में जोड़ें'}</button>`;
+}
+function openModal(i){lastFocus=document.activeElement;S.open=i;S.cmpOpen=false;$('modal').classList.remove('wide');renderModal();$('ov').hidden=false;$('mClose').focus()}
+function closeModal(){S.open=-1;S.cmpOpen=false;$('modal').classList.remove('wide');$('ov').hidden=true;if(lastFocus&&lastFocus.isConnected)lastFocus.focus()}
+function toggleCmp(i){if(S.cmp.has(i))S.cmp.delete(i);else if(S.cmp.size>=3){toast('एक बार में अधिकतम 3 जगहें');return}else S.cmp.add(i);render()}
+function renderCmpBar(){const b=$('cmpbar'),ids=[...S.cmp];b.hidden=!ids.length;if(!ids.length)return;
+  b.innerHTML=`<span>⚖ तुलना (${ids.length}/3): <b>${ids.map(i=>D[i].n).join(' · ')}</b></span>`+(ids.length>1?'<button class="btn primary" type="button" id="cGo">तुलना देखें</button>':'<small>एक और जगह चुनें</small>')+'<button class="btn" type="button" id="cClr">हटाएं</button>'}
+function openCompare(){lastFocus=document.activeElement;S.open=-1;S.cmpOpen=true;renderCompare();$('ov').hidden=false;$('mClose').focus()}
+function renderCompare(){
+  const ids=[...S.cmp],cs=ids.map(i=>calc(D[i]));
+  if(!ids.length){closeModal();return}
+  const rows=[['कुल खर्च',c=>c.total,inr,1],['प्रति व्यक्ति',c=>c.per,inr,1],['पेट्रोल',c=>c.petrol,inr,1],['होटल',c=>c.hotel,inr,1],['खाना',c=>c.food,inr,1],['अन्य',c=>c.other,inr,1],['आना-जाना',c=>c.km,v=>v+' किमी',1],['ठहराव',(c,i)=>stayTxt(D[i]),v=>v,0],['सर्वोत्तम समय',(c,i)=>seasonTxt(i),v=>v,0],[MN[S.month-1]+' में',(c,i)=>badge(i),v=>v,0]];
+  const body=rows.map(([l,f,fmt,mk])=>{const vals=cs.map((c,k)=>f(c,ids[k]));const m=mk?Math.min(...vals):null;return `<tr><td>${l}</td>`+vals.map(v=>`<td class="${mk&&v===m&&cs.length>1?'best':''}">${fmt(v)}</td>`).join('')+'</tr>'}).join('');
+  const t=cs.map(c=>c.total),diff=Math.max(...t)-Math.min(...t);
+  $('modal').classList.add('wide');
+  $('modal').innerHTML=`<div class="mh"><h2 id="mTitle">⚖ यात्रा की तुलना</h2><button class="x" type="button" id="mClose" aria-label="बंद करें">✕</button></div>
+  <div class="cwrap"><table class="ctable"><thead><tr><th></th>${ids.map(i=>`<th>${D[i].n}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>
+  <p class="warn" style="color:var(--muted)">${cs.length>1?'सबसे सस्ती और सबसे महंगी में '+inr(diff)+' का फर्क है। ':''}नीले रंग में सबसे कम खर्च। आपकी सेटिंग (ग्रुप, पेट्रोल, होटल) के हिसाब से।</p>`}
+function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2000)}
+function toggle(i){S.sel.has(i)?S.sel.delete(i):S.sel.add(i);save();render()}
+function copyText(){
+  const items=[...S.sel].sort((a,b)=>a-b).map(i=>({d:D[i],c:calc(D[i])}));
+  const tot=items.reduce((a,x)=>a+x.c.total,0);
+  const txt='यात्रा योजना (किशनगढ़ रेनवाल से, '+P.people+' लोग)\n'+items.map(x=>`• ${x.d.n}: ${inr(x.c.total)}`).join('\n')+'\nकुल: '+inr(tot)+' ('+inr(tot/P.people)+' प्रति व्यक्ति)';
+  const fb=()=>{const a=document.createElement('textarea');a.value=txt;document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}a.remove();toast(ok?'कॉपी हो गया':'कॉपी नहीं हुआ, सूची खोलकर चुनें')};
+  try{navigator.clipboard.writeText(txt).then(()=>toast('कॉपी हो गया'),fb)}catch(e){fb()}
+}
+function save(){try{localStorage.setItem('yk-plan2',JSON.stringify({v:3,P,sel:[...S.sel]}))}catch(e){}}
+function load(){try{const j=JSON.parse(localStorage.getItem('yk-plan2')||'null');if(j){if(j.v===3)Object.keys(DEF).forEach(k=>{if(typeof j.P[k]==='number')P[k]=j.P[k]});(j.sel||[]).forEach(i=>{if(D[i])S.sel.add(i)})}}catch(e){}}
+function setSliders(){['price','mileage','hotel','food','max'].forEach(k=>$(k).value=P[k])}
+
+function applyTheme(t){if(t)document.documentElement.setAttribute('data-theme',t);else document.documentElement.removeAttribute('data-theme')}
+try{const t=localStorage.getItem('yk-theme');if(t)applyTheme(t)}catch(e){}
+$('themeBtn').onclick=()=>{
+  const cur=document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  const n=cur==='dark'?'light':'dark';applyTheme(n);try{localStorage.setItem('yk-theme',n)}catch(e){}};
+
+['price','mileage','hotel','food','max'].forEach(k=>$(k).addEventListener('input',e=>{P[k]=+e.target.value;save();render()}));
+$('pMinus').onclick=()=>{P.people=Math.max(1,P.people-1);save();render()};
+$('pPlus').onclick=()=>{P.people=Math.min(12,P.people+1);save();render()};
+$('reset').onclick=()=>{Object.assign(P,DEF);setSliders();save();render()};
+let qt;$('q').addEventListener('input',e=>{clearTimeout(qt);qt=setTimeout(()=>{S.q=e.target.value;render()},150)});
+$('sort').onchange=e=>{S.sort=e.target.value;render()};
+document.querySelector('.seg').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(b){S.view=b.dataset.v;render()}});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(b){S.tab=b.dataset.t;render()}});
+$('view').addEventListener('click',e=>{
+  const ts=e.target.closest('[data-ts]');
+  if(ts){const k=ts.dataset.ts;if(S.tsort===k)S.tdir*=-1;else{S.tsort=k;S.tdir=1}render();return}
+  const cm=e.target.closest('[data-cmp]');if(cm){toggleCmp(+cm.dataset.cmp);return}
+  const p=e.target.closest('[data-pick]');if(p){toggle(+p.dataset.pick);return}
+  const o=e.target.closest('[data-open]');if(o)openModal(+o.dataset.open)});
+$('view').addEventListener('keydown',e=>{
+  if(e.key!=='Enter'&&e.key!==' ')return;
+  const o=e.target.closest('tr[data-open],circle[data-open]');if(o){e.preventDefault();openModal(+o.dataset.open)}});
+$('view').addEventListener('mouseover',e=>{
+  const p=e.target.closest('[data-tip]');const tip=$('tip');if(!tip)return;
+  if(!p){tip.hidden=true;return}
+  const i=+p.dataset.tip,c=calc(D[i]),box=tip.parentElement.getBoundingClientRect(),r=p.getBoundingClientRect();
+  tip.innerHTML=`<b>${D[i].n}</b><br>${inr(c.total)} · ${c.km} किमी`;tip.hidden=false;
+  tip.style.left=Math.min(box.width-230,Math.max(8,r.left-box.left-60))+'px';tip.style.top=(r.top-box.top-56)+'px'});
+$('view').addEventListener('mouseleave',()=>{const t=$('tip');if(t)t.hidden=true});
+$('modal').addEventListener('click',e=>{
+  if(e.target.closest('#mClose'))closeModal();
+  else if(e.target.closest('#mPick'))toggle(S.open)});
+$('ov').addEventListener('click',e=>{if(e.target===$('ov'))closeModal()});
+document.addEventListener('keydown',e=>{
+  if(S.open<0&&!S.cmpOpen)return;
+  if(e.key==='Escape')closeModal();
+  if(e.key==='Tab'){const f=[...$('modal').querySelectorAll('button')];if(!f.length)return;
+    const a=f[0],z=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}
+    else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}});
+$('tList').addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(b){S.sel.delete(+b.dataset.rm);save();render()}});
+$('tClear').onclick=()=>{S.sel.clear();save();render()};
+$('tCopy').onclick=copyText;
+$('tToggle').onclick=()=>{const l=$('tList');l.hidden=!l.hidden;$('tToggle').setAttribute('aria-expanded',!l.hidden);$('tToggle').textContent=l.hidden?'सूची देखें':'सूची छुपाएं'};
+
+$('month').innerHTML=MN.map((m,i)=>`<option value="${i+1}">📅 ${m}</option>`).join('');$('month').value=S.month;
+$('month').onchange=e=>{S.month=+e.target.value;render()};
+$('inS').onchange=e=>{S.inS=e.target.checked;render()};
+$('cmpbar').addEventListener('click',e=>{if(e.target.closest('#cGo'))openCompare();else if(e.target.closest('#cClr')){S.cmp.clear();render()}});
+load();setSliders();render();
+</script>
+</body>
+</html>

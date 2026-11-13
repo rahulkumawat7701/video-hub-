@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#172554">
+<title>भारत के 20 रोमांटिक डेस्टिनेशन | Travel Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Sora:wght@600;700&display=swap">
+<style>
+:root{color-scheme:light;--bg:#f3f6fc;--card:#fff;--text:#18233b;--muted:#65738b;--line:#e2e8f0;--primary:#5146e5;--soft:#eeedff;
+--green:#dcfce7;--green-text:#166534;--yellow:#fef3c7;--yellow-text:#92400e;--red:#ffe4e6;--red-text:#9f1239;--rose:#e11d48;
+--shadow:0 12px 35px rgba(20,35,70,.08);--fd:'Sora','Mukta',system-ui,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body.dark{color-scheme:dark;--bg:#0e1728;--card:#172338;--text:#f1f5ff;--muted:#a5b4cc;--line:#30405a;--primary:#a5a0ff;--soft:#2a2b50;
+--green:#143d2b;--green-text:#86efac;--yellow:#453719;--yellow-text:#fde68a;--red:#49202e;--red-text:#fda4af;--rose:#fb7185;--shadow:0 12px 35px rgba(0,0,0,.25)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Mukta','Noto Sans Devanagari',system-ui,sans-serif;font-size:16px;transition:background .2s,color .2s}
+button,input,select{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+.page{max-width:1500px;margin:auto;padding:20px 20px 100px}
+.hero{position:relative;overflow:hidden;color:#fff;padding:clamp(22px,4vw,42px);border-radius:24px;background:linear-gradient(120deg,#171d4f,#5146e5 62%,#0e9f91);box-shadow:var(--shadow)}
+.hero>*{position:relative;z-index:1}
+.hero::after{content:"";position:absolute;right:-90px;top:-110px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.28),transparent 65%);animation:glow 8s ease-in-out infinite alternate}
+@keyframes glow{to{transform:translate(-50px,40px) scale(1.2)}}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.98)}}
+.eyebrow{display:inline-block;padding:6px 12px;border:1px solid #ffffff50;border-radius:30px;background:#ffffff18;font-size:12px;letter-spacing:.06em}
+.hero h1{margin:16px 0 10px;font-family:var(--fd);font-size:clamp(26px,4vw,42px);line-height:1.35;text-wrap:balance}
+.hero p{max-width:800px;line-height:1.8;color:#e5eaff;margin:0}
+.hero-actions{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin-top:20px}
+.hero button{color:#fff;background:#ffffff18;border:1px solid #ffffff60;border-radius:11px;padding:10px 14px;min-height:44px}
+.hero button:hover{background:#ffffff30}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:20px 0}
+.stat,.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.stat{padding:18px}.stat span{color:var(--muted);font-size:13px}
+.stat strong{display:block;font-family:var(--fd);font-size:28px;margin:6px 0 0;font-variant-numeric:tabular-nums}
+.panel-head{padding:22px}
+.panel-head h2{margin:0 0 6px;font-family:var(--fd);font-size:22px}
+.panel-head p{margin:0;color:var(--muted);line-height:1.7;font-size:14px}
+.controls{display:grid;grid-template-columns:minmax(220px,2fr) repeat(3,minmax(130px,1fr)) auto auto auto;gap:10px;margin-top:18px}
+.controls input,.controls select{width:100%;min-width:0;min-height:44px;padding:10px 12px;background:var(--bg);border:1px solid var(--line);border-radius:11px}
+.btn{min-height:44px;padding:10px 15px;border:0;border-radius:11px;font-weight:700;background:var(--primary);color:#fff}
+body.dark .btn{color:#12122b}
+.btn.secondary{background:var(--soft);color:var(--text);border:1px solid var(--line)}
+.seg{display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--bg)}
+.seg button{border:0;background:none;padding:8px 14px;min-height:44px}
+.seg button[aria-pressed=true]{background:var(--primary);color:#fff;font-weight:700}
+body.dark .seg button[aria-pressed=true]{color:#12122b}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pill{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;min-height:40px;display:flex;gap:7px;align-items:center}
+.pill em{font-style:normal;color:var(--muted);font-size:.85em}
+.pill[aria-pressed=true]{border-color:var(--primary);background:var(--soft);font-weight:700}
+.results{margin-top:12px;font-size:13px;color:var(--muted)}
+
+.cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding:6px 22px 22px}
+.card{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:11px;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
+.card::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--primary),#0e9f91)}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--primary)}
+.ch{display:flex;gap:10px;align-items:flex-start}
+.ch>div{flex:1;min-width:0}
+.card h3{margin:0;font-size:1.08rem;line-height:1.35}
+.card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.88rem}
+.card dt{color:var(--muted)}.card dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.cf{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto}
+.link{border:0;background:none;color:var(--primary);font-weight:700;padding:6px 0}
+.fav{border:1px solid var(--line);background:var(--bg);border-radius:10px;width:40px;height:40px;font-size:1.15rem;flex:none;color:var(--muted)}
+.fav[aria-pressed=true]{color:var(--rose);border-color:var(--rose);background:var(--red)}
+
+.table-scroll{overflow:auto;max-height:750px;border-top:1px solid var(--line)}
+table{width:100%;border-collapse:separate;border-spacing:0;min-width:1150px}
+thead th{position:sticky;top:0;z-index:2;padding:13px 12px;text-align:left;white-space:nowrap;background:var(--soft);border-bottom:1px solid var(--line);font-size:13px}
+thead th button{padding:0;border:0;background:transparent;font-weight:700;text-align:left}
+tbody td{padding:14px 12px;vertical-align:top;line-height:1.65;font-size:13px;border-bottom:1px solid var(--line)}
+tbody tr:hover{background:var(--bg)}
+body[data-view=cards] .table-scroll{display:none}
+body[data-view=table] .cardgrid{display:none}
+.num{display:inline-flex;width:30px;height:30px;flex:none;align-items:center;justify-content:center;border-radius:9px;color:var(--primary);background:var(--soft);font-weight:800}
+.place{font-weight:700;font-size:14px}
+.muted{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.code{display:inline-block;margin:2px;padding:3px 7px;border-radius:6px;background:var(--soft);color:var(--primary);font-size:12px;font-weight:700}
+.badge{display:inline-block;padding:5px 9px;border-radius:7px;font-size:11px;font-weight:700}
+.badge.direct{background:var(--green);color:var(--green-text)}
+.badge.change{background:var(--yellow);color:var(--yellow-text)}
+.badge.check{background:var(--red);color:var(--red-text)}
+.distance{font-weight:700}
+.note{padding:16px 22px;color:var(--muted);background:var(--bg);font-size:13px;line-height:1.8;border-top:1px solid var(--line);border-radius:0 0 18px 18px}
+.note p{margin:0 0 6px}
+.empty{text-align:center;padding:35px;color:var(--muted)}
+.footer{text-align:center;padding:20px 8px;color:var(--muted);font-size:12px}
+
+.overlay{position:fixed;inset:0;background:rgba(5,12,24,.6);z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:20px;width:min(640px,100%);max-height:calc(100% - 8px);overflow:auto;padding:22px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow);animation:pop .25s ease}
+.mh{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.modal h2{margin:4px 0 0;font-family:var(--fd);font-size:1.35rem;line-height:1.35}
+.x{border:1px solid var(--line);background:var(--bg);border-radius:10px;width:40px;height:40px;flex:none}
+.sec{background:var(--bg);border-radius:12px;padding:10px 14px}
+.sec small{display:block;color:var(--muted);font-size:.78rem;margin-bottom:2px}
+.sec div{line-height:1.6;overflow-wrap:anywhere}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.links a{text-decoration:none;display:inline-flex;align-items:center;min-height:42px}
+
+.tray{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--card);border-top:2px solid var(--primary);box-shadow:0 -8px 28px rgba(0,0,0,.2);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));animation:pop .25s}
+.tray .in{max-width:1500px;margin:auto;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.tray b{color:var(--rose)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom,0px));background:var(--text);color:var(--bg);padding:8px 16px;border-radius:10px;z-index:30;font-size:.9rem}
+
+@media(max-width:1100px){.controls{grid-template-columns:1fr 1fr 1fr}.controls .searchbox{grid-column:1/-1}}
+@media(max-width:760px){
+ .page{padding:10px 10px 100px}.hero{border-radius:18px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{padding:13px}.stat strong{font-size:23px}
+ .panel-head{padding:15px}.controls{grid-template-columns:1fr 1fr}
+ .cardgrid{padding:4px 12px 14px}
+ .table-scroll{overflow:visible;max-height:none;border:0}
+ table{min-width:0;display:block}thead{display:none}
+ tbody{display:grid;gap:12px;padding:12px}
+ tbody tr{display:block;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
+ tbody td{display:grid;grid-template-columns:105px minmax(0,1fr);gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+ tbody td:last-child{border-bottom:0}
+ tbody td::before{content:attr(data-label);font-weight:700;color:var(--muted);font-size:12px}
+ tbody td:first-child{display:none}
+}
+@media(max-width:380px){.controls{grid-template-columns:1fr}.controls .searchbox{grid-column:auto}}
+@media print{
+ body{background:#fff;color:#000}.page{max-width:none;padding:0}
+ .controls,.hero-actions,.footer,.pills,.tray,.overlay,.toast,.fav,.cardgrid{display:none!important}
+ body .table-scroll{display:block!important;max-height:none;overflow:visible}
+ table{min-width:0;display:table}thead{display:table-header-group}tbody{display:table-row-group;padding:0}
+ tbody tr{display:table-row;break-inside:avoid}tbody td{display:table-cell;padding:6px}tbody td::before{content:none}thead th{position:static}
+ .hero{print-color-adjust:exact}
+}
+/* 3D effects */
+.hero>.scene{position:absolute;inset:0;z-index:0;perspective:900px;pointer-events:none}
+.orb{position:absolute;font-size:clamp(36px,6vw,68px);line-height:1;filter:drop-shadow(0 18px 16px rgba(0,0,0,.35));transform:translate3d(var(--mx,0px),var(--my,0px),0) rotateY(var(--ry,0deg));transition:transform .2s ease-out;animation:float 6s ease-in-out infinite}
+.o1{right:9%;top:12%}.o2{right:24%;top:55%;animation-delay:-2s}.o3{right:3%;bottom:10%;animation-delay:-4s}.o4{right:32%;top:8%;animation-delay:-1s}
+@keyframes float{50%{translate:0 -18px}}
+@keyframes flip{from{opacity:0;transform:perspective(900px) rotateX(-20deg) translateY(30px) scale(.94)}}
+.modal{animation:flip .45s cubic-bezier(.2,.8,.2,1);transform-origin:50% 0}
+.card{overflow:visible;transform-style:preserve-3d;will-change:transform}
+.card::before{border-radius:16px 16px 0 0}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .2s;background:radial-gradient(circle at var(--gx,50%) var(--gy,0%),rgba(255,255,255,.3),transparent 55%)}
+.card:hover::after{opacity:1}
+.card:hover{box-shadow:0 24px 44px rgba(20,35,70,.25)}
+.card.tilt{transition:box-shadow .2s,border-color .2s}
+.card:active{transform:scale(.98)}
+.card .ch,.card dl,.card .cf{transform:translateZ(26px)}
+.card .num{transform:translateZ(12px)}
+.stat{transform-style:preserve-3d;transition:transform .15s ease-out,box-shadow .2s}
+.stat.tilt{transition:box-shadow .2s}
+.stat:hover{box-shadow:0 20px 38px rgba(20,35,70,.2)}
+.stat span,.stat strong{display:block;transform:translateZ(20px)}
+.btn{box-shadow:0 4px 0 rgba(0,0,0,.25),0 8px 14px rgba(81,70,229,.25);transition:transform .1s,box-shadow .1s}
+.btn.secondary{box-shadow:0 3px 0 var(--line)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+@media(max-width:760px){.orb{opacity:.35}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body data-view="cards">
+<div class="page">
+
+<header class="hero" id="hero"><div class="scene" aria-hidden="true"><span class="orb o1" data-d="1">❤️</span><span class="orb o2" data-d="1.6">🚆</span><span class="orb o3" data-d="2.2">🏔️</span><span class="orb o4" data-d="0.7">✈️</span></div>
+  <span class="eyebrow">TRAVEL PLANNER · INDIA</span>
+  <h1>❤️ भारत के 20 रोमांटिक डेस्टिनेशन</h1>
+  <p>रेनवाल, जयपुर और फुलेरा से रेल यात्रा की योजना बनाएँ। ट्रेन, नजदीकी रेलवे स्टेशन और आगे सड़क मार्ग की जानकारी एक ही जगह देखें। पसंदीदा जगहें ♥ से चुनकर अपनी शॉर्टलिस्ट बनाएँ।</p>
+  <div class="hero-actions">
+    <span>शुरुआती स्टेशन: RNW (रेनवाल) · JP (जयपुर) · FL (फुलेरा)</span>
+    <button id="themeBtn" type="button" aria-pressed="false">🌙 डार्क मोड</button>
+  </div>
+</header>
+
+<noscript>यह पेज देखने के लिए JavaScript चालू करें।</noscript>
+
+<section class="stats" aria-live="polite">
+  <div class="stat"><span>कुल डेस्टिनेशन</span><strong id="totalCount">20</strong></div>
+  <div class="stat"><span>फ़िल्टर किए गए परिणाम</span><strong id="shownCount">20</strong></div>
+  <div class="stat"><span>सीधी ट्रेन मिली</span><strong id="routeCount">0</strong></div>
+  <div class="stat"><span>पुष्टि बाकी</span><strong id="checkCount">0</strong></div>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <h2>🚆 डेस्टिनेशन एक्सप्लोरर</h2>
+    <p>खोजें, फ़िल्टर करें, किसी भी कार्ड पर क्लिक करके पूरा विवरण देखें, या टेबल व्यू में हेडिंग पर क्लिक करके सॉर्ट करें।</p>
+
+    <div class="controls">
+      <input class="searchbox" id="search" type="search" placeholder="🔎 जगह, ट्रेन या स्टेशन खोजें..." aria-label="खोजें">
+      <select id="startFilter" aria-label="शुरुआती स्टेशन">
+        <option value="">सभी शुरुआती स्टेशन</option>
+        <option value="RNW">रेनवाल (RNW)</option>
+        <option value="JP">जयपुर (JP)</option>
+        <option value="FL">फुलेरा (FL)</option>
+      </select>
+      <select id="stateFilter" aria-label="राज्य"><option value="">सभी राज्य</option></select>
+      <select id="sortSel" aria-label="क्रम">
+        <option value="n">मूल क्रम</option>
+        <option value="place">नाम से</option>
+        <option value="rank">स्थिति से</option>
+        <option value="station">स्टेशन से</option>
+      </select>
+      <div class="seg" role="group" aria-label="व्यू">
+        <button type="button" data-view="cards" aria-pressed="true">कार्ड</button>
+        <button type="button" data-view="table" aria-pressed="false">टेबल</button>
+      </div>
+      <button class="btn secondary" id="resetBtn" type="button">रीसेट</button>
+      <button class="btn" id="printBtn" type="button">प्रिंट / PDF</button>
+    </div>
+
+    <div class="pills" id="pills" role="group" aria-label="रूट स्थिति"></div>
+    <div class="results" id="results" aria-live="polite"></div>
+  </div>
+
+  <div class="cardgrid" id="cards"></div>
+
+  <div class="table-scroll">
+    <table id="travelTable">
+      <thead>
+        <tr>
+          <th aria-sort="none"><button type="button" data-sort="n">#</button></th>
+          <th aria-sort="none"><button type="button" data-sort="place">डेस्टिनेशन ↕</button></th>
+          <th>शुरुआती स्टेशन</th>
+          <th>रेल रूट</th>
+          <th>ट्रेन नंबर / नाम</th>
+          <th aria-sort="none"><button type="button" data-sort="station">अंतिम रेलवे स्टेशन ↕</button></th>
+          <th>आगे सड़क दूरी</th>
+          <th>अतिरिक्त यात्रा</th>
+          <th aria-sort="none"><button type="button" data-sort="rank">स्थिति ↕</button></th>
+          <th>♥</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+  <div class="empty" id="empty" hidden>कोई परिणाम नहीं मिला। खोज या फ़िल्टर बदलकर देखें।</div>
+
+  <div class="note">
+    <p><strong>डेटा संबंधी नोट (जाँच: 10 अक्टूबर 2026):</strong> ट्रेन नंबर, चलने के दिन और स्टॉपेज सार्वजनिक टाइमटेबल साइटों के आधार पर हैं।
+    बुकिंग से पहले यात्रा की तारीख के अनुसार IRCTC/NTES पर ज़रूर जाँचें।</p>
+    <p><strong>स्थिति का अर्थ:</strong> “सीधी ट्रेन मिली” = उस स्टेशन तक सीधी ट्रेन टाइमटेबल में मिली; “बदलकर” = ट्रेन बदलनी या लंबी सड़क/उड़ान चाहिए;
+    “पुष्टि बाकी” = सीधी ट्रेन की पुष्टि नहीं हो पाई।</p>
+    <p>सड़क दूरियाँ अनुमानित हैं। अंडमान-निकोबार के लिए मुख्यभूमि से पोर्ट ब्लेयर तक उड़ान या जहाज की अलग यात्रा चाहिए।</p>
+  </div>
+</section>
+
+<div class="footer">Plan your journey · Verify before booking</div>
+</div>
+
+<div class="tray" id="tray" hidden>
+  <div class="in">
+    <span>♥ <b id="favCount">0</b> जगहें शॉर्टलिस्ट में</span>
+    <span style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn secondary" id="favShow" type="button">सिर्फ़ ये दिखाएँ</button>
+      <button class="btn" id="favCopy" type="button">सूची कॉपी करें</button>
+      <button class="btn secondary" id="favClear" type="button">खाली करें</button>
+    </span>
+  </div>
+</div>
+<div class="overlay" id="ov" hidden><div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle"></div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+"use strict";
+
+const STATUS = {
+  direct: { text: "सीधी ट्रेन मिली", pill: "सीधी ट्रेन", rank: 1 },
+  change: { text: "बदलकर / लंबी आगे की यात्रा", pill: "बदलकर / लंबी यात्रा", rank: 2 },
+  check:  { text: "पुष्टि बाकी", pill: "पुष्टि बाकी", rank: 3 }
+};
+
+const destinations = [
+ {n:1,place:"श्रीनगर / गुलमर्ग",state:"जम्मू-कश्मीर",start:["JP","FL"],route:"जयपुर / फुलेरा → जम्मू तवी, फिर वंदे भारत से श्रीनगर",train:"12413 पूजा SF (अजमेर–JAT, रोज़) · 14661 (बाड़मेर–JAT, रोज़); फिर जम्मू तवी–श्रीनगर वंदे भारत 26401/26402 (मई 2026 से नियमित; दिन और समय जाँचें)",station:"श्रीनगर (SINA)",distance:"स्टेशन से श्रीनगर शहर ~10 किमी; गुलमर्ग ~50–56 किमी",extra:"जम्मू तवी पर ट्रेन बदलें; गुलमर्ग के लिए टैक्सी",status:"change"},
+ {n:2,place:"मनाली",state:"हिमाचल प्रदेश",start:["RNW","FL"],route:"रेनवाल / फुलेरा → चंडीगढ़",train:"22451 बांद्रा टर्मिनस–चंडीगढ़ SF (सप्ताह में 2 दिन; रेनवाल ~05:39, चंडीगढ़ 14:15)",station:"चंडीगढ़ (CDG)",distance:"~310 किमी (लगभग 7–8 घंटे)",extra:"बस / टैक्सी",status:"direct"},
+ {n:3,place:"लेह-लद्दाख",state:"लद्दाख",start:["JP","FL"],route:"जयपुर / फुलेरा → जम्मू तवी → श्रीनगर (वंदे भारत)",train:"12413 / 14661 से जम्मू तवी, फिर वंदे भारत 26401/26402 — दिन और समय जाँचें",station:"श्रीनगर (SINA)",distance:"श्रीनगर से लेह ~420 किमी",extra:"सड़क (सर्दियों में ज़ोजिला बंद हो सकता है) या उड़ान; मौसम और परमिट जाँचें",status:"change"},
+ {n:4,place:"ऊटी",state:"तमिलनाडु",start:["JP"],route:"जयपुर → कोयंबटूर",train:"12970 जयपुर–कोयंबटूर SF (साप्ताहिक; दिन जाँचें)",station:"कोयंबटूर (CBE) / मेट्टुपालयम (MTP)",distance:"CBE से ~85–90 किमी; MTP से ~45 किमी",extra:"कोयंबटूर–मेट्टुपालयम लोकल ट्रेन (36 किमी), फिर नीलगिरि पर्वतीय रेल या सड़क",status:"direct"},
+ {n:5,place:"मुन्नार",state:"केरल",start:["JP"],route:"जयपुर → एर्नाकुलम",train:"12978 मरुसागर SF (अजमेर–एर्नाकुलम, साप्ताहिक: शुक्रवार; जयपुर ~12:05)",station:"एर्नाकुलम जं. (ERS) / आलुवा (AWY)",distance:"ERS से ~125–130 किमी; आलुवा से ~110 किमी",extra:"बस / टैक्सी",status:"direct"},
+ {n:6,place:"अंडमान-निकोबार",state:"अंडमान और निकोबार",start:["JP","RNW","FL"],route:"पहले चेन्नई / कोलकाता / विशाखापत्तनम जैसे मुख्यभूमि रेलहेड तक",train:"द्वीप के लिए सीधी ट्रेन नहीं; मुख्यभूमि तक ट्रेन तारीख अनुसार चुनें",station:"पोर्ट ब्लेयर हवाई अड्डा (IXZ)",distance:"द्वीप पर दूरी चुने गए स्थान पर निर्भर",extra:"मुख्यभूमि से उड़ान या जहाज; द्वीप पर रेल नहीं",status:"change"},
+ {n:7,place:"गोवा",state:"गोवा",start:["JP"],route:"जयपुर → मडगाँव",train:"12978 मरुसागर SF (साप्ताहिक: शुक्रवार; मडगाँव ~14:20, दूसरे दिन)",station:"मडगाँव (MAO)",distance:"दक्षिण गोवा ~5–40 किमी; उत्तर गोवा ~40–70 किमी",extra:"स्थानीय बस / टैक्सी",status:"direct"},
+ {n:8,place:"दार्जिलिंग",state:"पश्चिम बंगाल",start:["JP"],route:"जयपुर → न्यू जलपाईगुड़ी",train:"15631 बाड़मेर–गुवाहाटी एक्सप्रेस (साप्ताहिक; जयपुर ~09:10 दूसरे दिन, NJP ~14:50 तीसरे दिन)",station:"न्यू जलपाईगुड़ी (NJP)",distance:"~70 किमी",extra:"बस / टैक्सी; टॉय ट्रेन की उपलब्धता जाँचें",status:"direct"},
+ {n:9,place:"नैनीताल",state:"उत्तराखंड",start:["JP"],route:"जयपुर → काठगोदाम",train:"रानीखेत एक्सप्रेस: काठगोदाम→जयपुर 15014 (रोज़) मिली; जयपुर→काठगोदाम की वापसी सेवा IRCTC पर पुष्टि करें",station:"काठगोदाम (KGM)",distance:"~35 किमी",extra:"बस / टैक्सी",status:"check"},
+ {n:10,place:"कूर्ग / कोडागु",state:"कर्नाटक",start:["JP"],route:"जयपुर → मैसूरु",train:"12976 जयपुर–मैसूरु SF (सोम व बुध को जयपुर 19:35; मैसूरु ~16:00, तीसरे दिन)",station:"मैसूरु जं. (MYS)",distance:"मडिकेरी ~120–125 किमी",extra:"बस / टैक्सी",status:"direct"},
+ {n:11,place:"उदयपुर",state:"राजस्थान",start:["RNW","FL"],route:"रेनवाल / फुलेरा → उदयपुर सिटी",train:"20473 चेतक एक्सप्रेस (रोज़; रेनवाल ~23:57, फुलेरा ~00:40, उदयपुर 07:48)",station:"उदयपुर सिटी (UDZ)",distance:"शहर में ~3–10 किमी",extra:"स्थानीय ऑटो / टैक्सी",status:"direct"},
+ {n:12,place:"छितकुल",state:"हिमाचल प्रदेश",start:["RNW","FL"],route:"रेनवाल / फुलेरा → चंडीगढ़ (या कालका होकर शिमला)",train:"22451 बांद्रा टर्मिनस–चंडीगढ़ SF (सप्ताह में 2 दिन)",station:"चंडीगढ़ (CDG); विकल्प: शिमला (नैरो गेज, कालका होकर)",distance:"चंडीगढ़ से ~350–380 किमी; शिमला से ~245 किमी",extra:"शिमला–नारकंडा–सांगला होकर लंबी पहाड़ी सड़क यात्रा; बस / टैक्सी",status:"direct"},
+ {n:13,place:"मेघालय / शिलांग",state:"मेघालय",start:["JP"],route:"जयपुर → गुवाहाटी",train:"15631 बाड़मेर–गुवाहाटी एक्सप्रेस (साप्ताहिक; गुवाहाटी तीसरे दिन ~23:35)",station:"गुवाहाटी (GHY)",distance:"शिलांग ~100 किमी",extra:"बस / टैक्सी",status:"direct"},
+ {n:14,place:"तवांग",state:"अरुणाचल प्रदेश",start:["JP"],route:"जयपुर → गुवाहाटी, या आगे रंगापारा नॉर्थ / तेजपुर",train:"15631 बाड़मेर–गुवाहाटी एक्सप्रेस (साप्ताहिक); आगे असम में ट्रेन बदलकर रंगापारा नॉर्थ",station:"गुवाहाटी (GHY) / रंगापारा नॉर्थ (RPAN)",distance:"गुवाहाटी से ~480 किमी; रंगापारा नॉर्थ से ~320–380 किमी (स्रोतों में अंतर)",extra:"लंबी पहाड़ी सड़क यात्रा; इनर लाइन परमिट और मौसम जाँचें",status:"change"},
+ {n:15,place:"हम्पी",state:"कर्नाटक",start:["JP"],route:"सीधी ट्रेन नहीं मिली; बेंगलुरु / हुबली होकर होसपेटे",train:"12976 से KSR बेंगलुरु तक, फिर हम्पी एक्सप्रेस 16591/16592 (बेंगलुरु–हुबली, होसपेटे होकर) — पुष्टि करें",station:"होसपेटे (HPT)",distance:"~13 किमी",extra:"स्थानीय बस / ऑटो / टैक्सी",status:"check"},
+ {n:16,place:"वायनाड",state:"केरल",start:["JP"],route:"जयपुर → कोझिकोड",train:"12978 मरुसागर SF (साप्ताहिक: शुक्रवार; कोझिकोड ~00:15, तीसरे दिन)",station:"कोझिकोड (CLT)",distance:"कलपेट्टा ~70–75 किमी; वायनाड के अन्य हिस्से ~70–100 किमी",extra:"बस / टैक्सी",status:"direct"},
+ {n:17,place:"चेरापूंजी / सोहरा",state:"मेघालय",start:["JP"],route:"जयपुर → गुवाहाटी",train:"15631 बाड़मेर–गुवाहाटी एक्सप्रेस (साप्ताहिक)",station:"गुवाहाटी (GHY)",distance:"~155–160 किमी",extra:"बस / टैक्सी; शिलांग होकर जाएँ",status:"direct"},
+ {n:18,place:"खजुराहो",state:"मध्य प्रदेश",start:["JP"],route:"जयपुर → खजुराहो",train:"19666 उदयपुर सिटी–खजुराहो एक्सप्रेस (रोज़; जयपुर ~05:50, खजुराहो ~19:05)",station:"खजुराहो (KURJ)",distance:"मंदिरों तक ~5–10 किमी",extra:"स्थानीय ऑटो / टैक्सी",status:"direct"},
+ {n:19,place:"रण ऑफ कच्छ",state:"गुजरात",start:["JP"],route:"जयपुर → भुज",train:"14311 / 14321 बरेली–भुज एक्सप्रेस (जयपुर ~17:30; दिन और समय जाँचें)",station:"भुज (BHUJ)",distance:"धोरडो / रण उत्सव क्षेत्र ~80–90 किमी",extra:"बस / टैक्सी; मौसम व बुकिंग जाँचें",status:"direct"},
+ {n:20,place:"गोकर्ण",state:"कर्नाटक",start:["JP"],route:"जयपुर → गोकर्ण रोड",train:"12978 मरुसागर SF (साप्ताहिक: शुक्रवार; गोकर्ण रोड ~15:50, दूसरे दिन)",station:"गोकर्ण रोड (GOK)",distance:"~10–15 किमी",extra:"स्थानीय टैक्सी / ऑटो",status:"direct"}
+];
+
+destinations.forEach(d => {
+  d.statusText = STATUS[d.status].text;
+  d.rank = STATUS[d.status].rank;
+  d.startText = d.start.join(" ");
+  d.search = [d.place,d.state,d.startText,d.route,d.train,d.station,d.distance,d.extra,d.statusText].join(" ").toLocaleLowerCase("hi");
+});
+
+const $ = id => document.getElementById(id);
+const ST = {q:"", start:"", state:"", status:"", fav:false};
+let sortKey = "n", sortDirection = 1, lastFocus = null, openId = 0;
+const THEME_KEY = "travel-planner-theme", FAV_KEY = "travel-planner-fav";
+let favs = new Set();
+try { favs = new Set(JSON.parse(localStorage.getItem(FAV_KEY) || "[]")); } catch (e) {}
+const saveFavs = () => { try { localStorage.setItem(FAV_KEY, JSON.stringify([...favs])); } catch (e) {} };
+
+const esc = v => String(v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+const codes = d => d.start.map(s => `<span class="code">${esc(s)}</span>`).join(" ");
+const badge = d => `<span class="badge ${d.status}">${esc(d.statusText)}</span>`;
+const heart = d => `<button class="fav" type="button" data-fav="${d.n}" aria-pressed="${favs.has(d.n)}" aria-label="${esc(d.place)} पसंदीदा">${favs.has(d.n) ? "♥" : "♡"}</button>`;
+
+[...new Set(destinations.map(d => d.state))].sort((a,b) => a.localeCompare(b,"hi"))
+  .forEach(s => $("stateFilter").insertAdjacentHTML("beforeend", `<option value="${esc(s)}">${esc(s)}</option>`));
+
+function cardHTML(d) {
+  return `<article class="card" data-open="${d.n}" tabindex="0" aria-label="${esc(d.place)} का विवरण खोलें">
+    <div class="ch"><span class="num">${d.n}</span><div><h3 class="place">${esc(d.place)}</h3><span class="muted">${esc(d.state)}</span></div>${heart(d)}</div>
+    <div>${codes(d)}</div>
+    <dl><dt>🚉 स्टेशन</dt><dd>${esc(d.station)}</dd><dt>🛣️ आगे</dt><dd>${esc(d.distance)}</dd></dl>
+    <div class="cf">${badge(d)}<span class="link">पूरा विवरण →</span></div></article>`;
+}
+function rowHTML(d) {
+  return `<tr>
+    <td data-label="#"><span class="num">${d.n}</span></td>
+    <td data-label="डेस्टिनेशन"><button class="link place" type="button" data-open="${d.n}">${esc(d.place)}</button><span class="muted">${esc(d.state)}</span></td>
+    <td data-label="शुरुआती स्टेशन">${codes(d)}</td>
+    <td data-label="रेल रूट">${esc(d.route)}</td>
+    <td data-label="ट्रेन">${esc(d.train)}</td>
+    <td data-label="अंतिम स्टेशन">${esc(d.station)}</td>
+    <td data-label="सड़क दूरी"><span class="distance">${esc(d.distance)}</span></td>
+    <td data-label="अतिरिक्त यात्रा">${esc(d.extra)}</td>
+    <td data-label="स्थिति">${badge(d)}</td>
+    <td data-label="पसंदीदा">${heart(d)}</td></tr>`;
+}
+
+function render() {
+  const q = ST.q.trim().toLocaleLowerCase("hi");
+  const rows = destinations.filter(d =>
+    (!q || d.search.includes(q)) && (!ST.start || d.start.includes(ST.start)) &&
+    (!ST.state || d.state === ST.state) && (!ST.status || d.status === ST.status) && (!ST.fav || favs.has(d.n))
+  ).sort((a,b) => {
+    const av = a[sortKey], bv = b[sortKey];
+    if (typeof av === "number" && typeof bv === "number") return (av - bv) * sortDirection || a.n - b.n;
+    return String(av).localeCompare(String(bv),"hi",{numeric:true}) * sortDirection || a.n - b.n;
+  });
+
+  $("cards").innerHTML = rows.map(cardHTML).join("");
+  $("tableBody").innerHTML = rows.map(rowHTML).join("");
+  const cnt = s => destinations.filter(d => d.status === s).length;
+  $("totalCount").textContent = destinations.length;
+  $("shownCount").textContent = rows.length;
+  $("routeCount").textContent = cnt("direct");
+  $("checkCount").textContent = cnt("check");
+  $("results").textContent = `${rows.length} परिणाम मिले`;
+  $("empty").hidden = rows.length > 0;
+
+  const pills = [["", "सभी", destinations.length], ...Object.keys(STATUS).map(k => [k, STATUS[k].pill, cnt(k)])];
+  $("pills").innerHTML = pills.map(([k,l,c]) => `<button class="pill" type="button" data-pill="${k}" aria-pressed="${!ST.fav && ST.status === k}">${l}<em>${c}</em></button>`).join("") +
+    `<button class="pill" type="button" data-pill="fav" aria-pressed="${ST.fav}">♥ पसंदीदा<em>${favs.size}</em></button>`;
+
+  $("tray").hidden = !favs.size;
+  $("favCount").textContent = favs.size;
+  $("sortSel").value = ["n","place","rank","station"].includes(sortKey) ? sortKey : "n";
+  document.querySelectorAll("th[aria-sort]").forEach(th => {
+    const b = th.querySelector("[data-sort]");
+    const on = b && b.dataset.sort === sortKey;
+    th.setAttribute("aria-sort", on ? (sortDirection === 1 ? "ascending" : "descending") : "none");
+  });
+  if (openId) renderModal();
+}
+
+function renderModal() {
+  const d = destinations.find(x => x.n === openId);
+  const sec = (l, v) => `<div class="sec"><small>${l}</small><div>${esc(v)}</div></div>`;
+  const maps = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(d.station.split("(")[0].trim() + " railway station");
+  $("modal").innerHTML = `
+    <div class="mh"><div>${badge(d)}<h2 id="mTitle">${esc(d.place)}</h2><span class="muted">${esc(d.state)} · शुरुआत: ${codes(d)}</span></div>
+    <button class="x" type="button" id="mClose" aria-label="बंद करें">✕</button></div>
+    ${sec("🚆 रेल रूट", d.route)}${sec("🎫 ट्रेन नंबर / नाम", d.train)}${sec("🚉 अंतिम रेलवे स्टेशन", d.station)}
+    ${sec("🛣️ आगे सड़क दूरी", d.distance)}${sec("🚌 अतिरिक्त यात्रा", d.extra)}
+    <div class="links">
+      <a class="btn" href="https://www.irctc.co.in/nget/train-search" target="_blank" rel="noopener">IRCTC पर जाँचें</a>
+      <a class="btn secondary" href="https://enquiry.indianrail.gov.in/ntes/" target="_blank" rel="noopener">NTES स्टेटस</a>
+      <a class="btn secondary" href="${maps}" target="_blank" rel="noopener">मैप में स्टेशन</a>
+      <button class="btn secondary" type="button" data-fav="${d.n}" aria-pressed="${favs.has(d.n)}">${favs.has(d.n) ? "♥ शॉर्टलिस्ट से हटाएँ" : "♡ शॉर्टलिस्ट में जोड़ें"}</button>
+    </div>`;
+}
+function openModal(n) {
+  lastFocus = document.activeElement; openId = n; renderModal(); $("ov").hidden = false; $("mClose").focus();
+}
+function closeModal() {
+  openId = 0; $("ov").hidden = true; if (lastFocus && lastFocus.isConnected) lastFocus.focus();
+}
+function toast(m) {
+  const t = $("toast"); t.textContent = m; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => t.hidden = true, 2000);
+}
+function copyList() {
+  const items = destinations.filter(d => favs.has(d.n));
+  const txt = "मेरी रोमांटिक ट्रिप शॉर्टलिस्ट\n" + items.map(d => `• ${d.place} (${d.state}) — ${d.station}, ${d.statusText}`).join("\n");
+  const fb = () => { const a = document.createElement("textarea"); a.value = txt; document.body.appendChild(a); a.select(); let ok = false; try { ok = document.execCommand("copy"); } catch (e) {} a.remove(); toast(ok ? "सूची कॉपी हो गई" : "कॉपी नहीं हो पाई"); };
+  try { navigator.clipboard.writeText(txt).then(() => toast("सूची कॉपी हो गई"), fb); } catch (e) { fb(); }
+}
+
+let timer;
+$("search").addEventListener("input", e => { clearTimeout(timer); timer = setTimeout(() => { ST.q = e.target.value; render(); }, 120); });
+$("startFilter").addEventListener("change", e => { ST.start = e.target.value; render(); });
+$("stateFilter").addEventListener("change", e => { ST.state = e.target.value; render(); });
+$("sortSel").addEventListener("change", e => { sortKey = e.target.value; sortDirection = 1; render(); });
+$("resetBtn").addEventListener("click", () => {
+  Object.assign(ST, {q:"", start:"", state:"", status:"", fav:false});
+  $("search").value = ""; $("startFilter").value = ""; $("stateFilter").value = "";
+  sortKey = "n"; sortDirection = 1; render();
+});
+$("printBtn").addEventListener("click", () => window.print());
+$("favShow").addEventListener("click", () => { ST.fav = true; ST.status = ""; render(); });
+$("favCopy").addEventListener("click", copyList);
+$("favClear").addEventListener("click", () => { favs.clear(); saveFavs(); ST.fav = false; render(); });
+document.querySelectorAll("[data-sort]").forEach(b => b.addEventListener("click", () => {
+  const k = b.dataset.sort;
+  if (sortKey === k) sortDirection *= -1; else { sortKey = k; sortDirection = 1; }
+  render();
+}));
+
+document.addEventListener("click", e => {
+  const v = e.target.closest(".seg [data-view]");
+  if (v) {
+    document.body.dataset.view = v.dataset.view;
+    document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-pressed", b === v));
+    return;
+  }
+  const p = e.target.closest("[data-pill]");
+  if (p) { const k = p.dataset.pill; if (k === "fav") { ST.fav = !ST.fav; } else { ST.fav = false; ST.status = k; } render(); return; }
+  const f = e.target.closest("[data-fav]");
+  if (f) {
+    const n = +f.dataset.fav;
+    if (favs.has(n)) favs.delete(n); else favs.add(n);
+    saveFavs(); if (ST.fav && !favs.size) ST.fav = false; render(); return;
+  }
+  if (e.target.closest("#mClose") || e.target === $("ov")) { closeModal(); return; }
+  const o = e.target.closest("[data-open]");
+  if (o) openModal(+o.dataset.open);
+});
+document.addEventListener("keydown", e => {
+  if (openId) {
+    if (e.key === "Escape") closeModal();
+    if (e.key === "Tab") {
+      const f = [...$("modal").querySelectorAll("button,a")];
+      if (!f.length) return;
+      const a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+      else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    }
+    return;
+  }
+  if ((e.key === "Enter" || e.key === " ") && e.target.matches(".card")) { e.preventDefault(); openModal(+e.target.dataset.open); }
+});
+
+function applyTheme(dark) {
+  document.body.classList.toggle("dark", dark);
+  $("themeBtn").textContent = dark ? "☀️ लाइट मोड" : "🌙 डार्क मोड";
+  $("themeBtn").setAttribute("aria-pressed", String(dark));
+  document.querySelector('meta[name="theme-color"]').setAttribute("content", dark ? "#0e1728" : "#172554");
+}
+function initialTheme() {
+  try { const s = localStorage.getItem(THEME_KEY); if (s) return s === "dark"; } catch (e) {}
+  return !!(window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
+}
+$("themeBtn").addEventListener("click", () => {
+  const dark = !document.body.classList.contains("dark");
+  applyTheme(dark);
+  try { localStorage.setItem(THEME_KEY, dark ? "dark" : "light"); } catch (e) {}
+});
+
+const REDUCE = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+function tilt(el, e) {
+  const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+  el.style.transform = `perspective(900px) rotateX(${((.5 - y) * 12).toFixed(2)}deg) rotateY(${((x - .5) * 14).toFixed(2)}deg) translateZ(8px)`;
+  el.style.setProperty("--gx", (x * 100).toFixed(1) + "%");
+  el.style.setProperty("--gy", (y * 100).toFixed(1) + "%");
+  el.classList.add("tilt");
+}
+function untilt(el) { el.style.transform = ""; el.classList.remove("tilt"); }
+function orbs(e, reset) {
+  const r = $("hero").getBoundingClientRect();
+  const nx = reset ? 0 : (e.clientX - r.left) / r.width - .5, ny = reset ? 0 : (e.clientY - r.top) / r.height - .5;
+  document.querySelectorAll(".orb").forEach(o => {
+    const d = +o.dataset.d;
+    o.style.setProperty("--mx", (nx * d * -50).toFixed(1) + "px");
+    o.style.setProperty("--my", (ny * d * -36).toFixed(1) + "px");
+    o.style.setProperty("--ry", (nx * d * 40).toFixed(1) + "deg");
+  });
+}
+if (!REDUCE) {
+  document.addEventListener("pointermove", e => {
+    if (e.pointerType === "touch" || !e.target.closest) return;
+    const el = e.target.closest(".card,.stat");
+    if (el) tilt(el, e);
+    if (e.target.closest("#hero")) orbs(e, false);
+  });
+  document.addEventListener("pointerout", e => {
+    if (!e.target.closest) return;
+    const el = e.target.closest(".card,.stat");
+    if (el && !el.contains(e.relatedTarget)) untilt(el);
+    const h = e.target.closest("#hero");
+    if (h && !h.contains(e.relatedTarget)) orbs(e, true);
+  });
+}
+
+applyTheme(initialTheme());
+render();
+</script>
+</body>
+</html>
