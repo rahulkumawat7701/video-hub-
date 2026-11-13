@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sweet Memories</title>
+<link rel="preconnect" href="https://www.googleapis.com">
+<link rel="preconnect" href="https://lh3.googleusercontent.com">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+<style>
+:root{--brand:#2563eb;--plyr-color-main:var(--brand)}
+.t-green{--brand:#16a34a}.t-purple{--brand:#9333ea}.t-cyan{--brand:#0891b2}.t-rose{--brand:#e11d48}
+.bg-b{background:var(--brand)}.tx-b{color:var(--brand)}
+.bg-bl{background:color-mix(in srgb,var(--brand) 12%,transparent)}
+.nav-on{background:color-mix(in srgb,var(--brand) 12%,transparent);color:var(--brand)}
+.seg-on{background:var(--brand);color:#fff}
+.hero{background:linear-gradient(to top,rgba(0,0,0,.8),rgba(0,0,0,.2)),url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=70') center/cover,var(--brand)}
+.sk{background:linear-gradient(90deg,#e2e8f0 25%,#f1f5f9 50%,#e2e8f0 75%);background-size:200% 100%;animation:sh 1.2s infinite}
+.dark .sk{background:linear-gradient(90deg,#1e293b 25%,#334155 50%,#1e293b 75%);background-size:200% 100%}
+@keyframes sh{to{background-position:-200% 0}}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.fade{animation:up .4s both}
+.zoom{transform:scale(2);cursor:zoom-out}
+#stage img{transition:transform .3s;cursor:zoom-in}
+.vb{width:2.5rem;height:2.5rem;border-radius:9999px;background:rgba(255,255,255,.12);color:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.vb:hover{background:var(--brand)}
+.cov{transition:opacity .5s,transform .5s}
+::-webkit-scrollbar{width:8px;height:6px}::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:4px}
+</style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans flex h-screen overflow-hidden">
+
+<div id="scrim" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden"></div>
+<aside id="side" class="fixed md:static inset-y-0 left-0 w-64 -translate-x-full md:translate-x-0 transition-transform bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col z-40">
+  <div class="p-6 flex items-center gap-3 border-b border-slate-100 dark:border-slate-700">
+    <div class="w-10 h-10 bg-b rounded-full flex items-center justify-center text-white"><i class="fa-solid fa-camera-retro text-xl"></i></div>
+    <div><h1 class="font-bold leading-tight">Sweet</h1><p class="text-xs text-slate-500 tracking-wider">MEMORIES</p></div>
+  </div>
+  <nav class="p-4 space-y-2">
+    <a href="#/" id="nav-home" class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium"><i class="fa-solid fa-house w-5"></i>होम (सभी मेमोरीज)</a>
+    <a href="#/fav" id="nav-fav" class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium hover:bg-slate-100 dark:hover:bg-slate-700"><i class="fa-solid fa-heart w-5"></i>पसंदीदा <span id="fav-count" class="ml-auto text-xs bg-bl tx-b px-2 py-0.5 rounded-full">0</span></a>
+  </nav>
+</aside>
+
+<main id="scroller" class="flex-1 flex flex-col h-full overflow-y-auto relative">
+  <div class="sticky top-0 z-20 bg-white/90 dark:bg-slate-800/90 backdrop-blur border-b border-slate-200 dark:border-slate-700">
+    <header class="p-3 flex items-center gap-3">
+      <button id="menu-btn" class="md:hidden w-10 h-10 text-xl" aria-label="मेन्यू"><i class="fa-solid fa-bars"></i></button>
+      <div class="relative flex-1 max-w-xl">
+        <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400"></i>
+        <input id="search" type="search" placeholder="मेमोरी खोजें..." class="w-full pl-10 pr-4 py-2 rounded-full bg-slate-100 dark:bg-slate-700 outline-none text-sm focus:ring-2">
+      </div>
+      <div class="relative ml-auto">
+        <button id="theme-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700" aria-label="थीम"><i class="fa-solid fa-palette"></i></button>
+        <div id="theme-menu" class="hidden absolute right-0 top-12 bg-white dark:bg-slate-800 p-3 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 flex gap-2 z-50">
+          <button data-t="" class="w-8 h-8 rounded-full bg-blue-600"></button><button data-t="green" class="w-8 h-8 rounded-full bg-green-600"></button>
+          <button data-t="purple" class="w-8 h-8 rounded-full bg-purple-600"></button><button data-t="cyan" class="w-8 h-8 rounded-full bg-cyan-600"></button>
+          <button data-t="rose" class="w-8 h-8 rounded-full bg-rose-600"></button>
+        </div>
+      </div>
+      <button id="dark-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700" aria-label="डार्क मोड"><i class="fa-solid fa-moon"></i></button>
+    </header>
+    <!-- Shared toolbar: every page -->
+    <div class="px-3 pb-3 flex flex-wrap items-center gap-2">
+      <div id="filters" class="flex bg-slate-100 dark:bg-slate-700 p-1 rounded-lg text-sm font-medium">
+        <button data-f="all" class="px-3 sm:px-4 py-1.5 rounded-md">सभी <span data-c="all" class="text-xs opacity-70"></span></button>
+        <button data-f="image" class="px-3 sm:px-4 py-1.5 rounded-md"><i class="fa-regular fa-image mr-1"></i>फोटोज <span data-c="image" class="text-xs opacity-70"></span></button>
+        <button data-f="video" class="px-3 sm:px-4 py-1.5 rounded-md"><i class="fa-solid fa-video mr-1"></i>वीडियोज <span data-c="video" class="text-xs opacity-70"></span></button>
+      </div>
+      <select id="sort" class="text-sm rounded-lg bg-slate-100 dark:bg-slate-700 px-3 py-2 outline-none">
+        <option value="new">नया पहले</option><option value="old">पुराना पहले</option><option value="name">नाम A-Z</option>
+      </select>
+      <button id="dens" class="hidden w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-700" title="ग्रिड साइज़"><i class="fa-solid fa-table-cells-large"></i></button>
+      <span id="result" class="ml-auto text-xs text-slate-500"></span>
+    </div>
+  </div>
+
+  <section id="home" class="pb-10">
+    <div class="hero h-52 sm:h-64 flex items-end p-6 sm:p-10 text-white">
+      <div>
+        <h2 class="text-4xl sm:text-5xl font-bold italic" style="font-family:serif">Sweet Memories</h2>
+        <p class="opacity-90 mt-1">"हर याद एक कहानी है..."</p>
+      </div>
+    </div>
+    <div class="p-6 sm:p-10">
+      <h3 class="text-xl font-bold mb-6"><i class="fa-solid fa-images tx-b"></i> मेरी मेमोरीज</h3>
+      <div id="trips" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+    </div>
+  </section>
+
+  <section id="gallery" class="hidden p-4 sm:p-8">
+    <div class="max-w-7xl mx-auto w-full">
+      <div class="flex items-center gap-3 mb-6 min-w-0">
+        <button id="back" class="w-10 h-10 bg-bl tx-b rounded-full shrink-0" aria-label="वापस"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="min-w-0"><h2 id="g-title" class="text-xl sm:text-2xl font-bold truncate"></h2><div id="crumbs" class="text-xs text-slate-500 truncate"></div></div>
+      </div>
+      <div id="grid" class="grid gap-3 sm:gap-4"></div>
+      <div id="sentinel" class="h-10"></div>
+    </div>
+  </section>
+</main>
+
+<!-- Viewer -->
+<div id="viewer" class="fixed inset-0 z-50 hidden bg-black/95 flex-col">
+  <div class="absolute top-0 inset-x-0 z-30 p-4 flex justify-between items-center bg-gradient-to-b from-black/70 to-transparent text-white">
+    <div class="min-w-0 mr-3"><div id="v-name" class="font-medium text-sm truncate"></div><div id="v-count" class="text-xs opacity-70"></div></div>
+    <div class="flex gap-2 shrink-0">
+      <button id="v-mode" class="vb hidden" title="स्मूद मोड (Drive प्लेयर)"><i class="fa-solid fa-bolt"></i></button>
+      <button id="v-fav" class="vb" title="पसंदीदा"><i class="fa-regular fa-heart"></i></button>
+      <button id="v-slide" class="vb" title="स्लाइडशो"><i class="fa-solid fa-play"></i></button>
+      <button id="v-fs" class="vb" title="फुल स्क्रीन"><i class="fa-solid fa-expand"></i></button>
+      <a id="v-dl" class="vb" target="_blank" rel="noopener" title="डाउनलोड"><i class="fa-solid fa-download"></i></a>
+      <button id="v-close" class="vb" title="बंद करें"><i class="fa-solid fa-xmark text-xl"></i></button>
+    </div>
+  </div>
+  <button id="v-prev" class="vb absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-20 !w-12 !h-12"><i class="fa-solid fa-chevron-left"></i></button>
+  <button id="v-next" class="vb absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-20 !w-12 !h-12"><i class="fa-solid fa-chevron-right"></i></button>
+  <div id="stage" class="flex-1 flex items-center justify-center overflow-hidden pt-14 px-0 sm:px-12"></div>
+  <div id="strip" class="flex gap-2 overflow-x-auto p-2 justify-start sm:justify-center bg-black/60"></div>
+</div>
+
+<div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-2xl opacity-0 pointer-events-none transition-opacity z-[60] text-sm text-center"></div>
+
+<script>
+// ===== CONFIG =====
+// ज़रूरी: अपनी API key को Google Cloud में "HTTP referrers" से restrict करें (सिर्फ Drive API)।
+const API_KEY = 'AIzaSyDkqillAPWjvtWobJEURtLENYE4zFM_ZEc';
+// एक या ज़्यादा फ़ोल्डर ID डाल सकते हैं, जैसे ['id1', 'id2', 'id3']
+const MAIN_FOLDER_IDS = ['181Yf4iLFji-5TlbQg-nr6ffBTt2tpuy-'];
+const PAGE = 48;
+const DENS = [
+  'grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8',
+  'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5',
+  'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'
+];
+
+// ===== HELPERS =====
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const store = {
+  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+function toast(msg, ms = 2500) { const t = $('toast'); t.textContent = msg; t.classList.remove('opacity-0'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.add('opacity-0'), ms); }
+const isVideo = f => f.mimeType.startsWith('video/');
+const isFolder = f => f.mimeType === 'application/vnd.google-apps.folder';
+const fbThumb = (id, s) => `https://drive.google.com/thumbnail?id=${id}&sz=w${s}`;
+const thumb = (f, s = 500) => f.thumbnailLink ? f.thumbnailLink.replace(/=s\d+$/, '=s' + s) : fbThumb(f.id, s);
+const mediaUrl = f => `https://www.googleapis.com/drive/v3/files/${f.id}?alt=media&key=${API_KEY}`;
+const fmt = ms => { const s = Math.round(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+const addFb = img => { img.onerror = () => { img.onerror = null; const id = img.dataset.id; if (id) img.src = fbThumb(id, 600); }; };
+
+const cache = {};
+async function drive(params) {
+  const u = new URL('https://www.googleapis.com/drive/v3/files');
+  Object.entries({ key: API_KEY, ...params }).forEach(([k, v]) => { if (v !== undefined && v !== null) u.searchParams.set(k, v); });
+  const r = await fetch(u);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+async function listAll(q, fields, orderBy, max = Infinity) {
+  const key = q + fields + max; if (cache[key]) return cache[key];
+  let out = [], token;
+  do {
+    const d = await drive({ q, fields: `nextPageToken,${fields}`, orderBy, pageSize: Math.min(1000, max), ...(token && { pageToken: token }) });
+    out = out.concat(d.files || []); token = d.nextPageToken;
+  } while (token && out.length < max);
+  return cache[key] = out;
+}
+
+// ===== STATE =====
+const S = { trips: [], items: [], filter: 'all', sort: 'new', limit: PAGE, list: [], view: [], idx: 0, favs: store.get('favs', {}), names: {}, slide: null, isFav: false, home: true, dens: store.get('dens', 1), player: null, mode: 'raw', rendered: 0 };
+const q = () => $('search').value.trim().toLowerCase();
+const sorters = { new: (a, b) => (b.createdTime || '').localeCompare(a.createdTime || ''), old: (a, b) => (a.createdTime || '').localeCompare(b.createdTime || ''), name: (a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }) };
+
+// ===== THEME / NAV =====
+function applyTheme() {
+  const t = store.get('theme', ''), dark = store.get('dark', false);
+  document.documentElement.className = (dark ? 'dark ' : '') + (t ? 't-' + t : '');
+  $('dark-btn').innerHTML = `<i class="fa-solid fa-${dark ? 'sun' : 'moon'}"></i>`;
+}
+$('dark-btn').onclick = () => { store.set('dark', !store.get('dark', false)); applyTheme(); };
+$('theme-btn').onclick = e => { e.stopPropagation(); $('theme-menu').classList.toggle('hidden'); };
+$('theme-menu').onclick = e => { const b = e.target.closest('button'); if (b) { store.set('theme', b.dataset.t); applyTheme(); $('theme-menu').classList.add('hidden'); } };
+document.addEventListener('click', () => $('theme-menu').classList.add('hidden'));
+const openNav = o => { $('side').classList.toggle('-translate-x-full', !o); $('scrim').classList.toggle('hidden', !o); };
+$('menu-btn').onclick = () => openNav(true); $('scrim').onclick = () => openNav(false);
+
+// ===== SHARED TOOLBAR (filters + sort) =====
+function setToolbar(all, img, vid, shown) {
+  $('filters').querySelectorAll('button').forEach(b => b.classList.toggle('seg-on', b.dataset.f === S.filter));
+  ['all', 'image', 'video'].forEach((k, i) => { $('filters').querySelector(`[data-c="${k}"]`).textContent = [all, img, vid][i] ?? ''; });
+  $('result').textContent = shown != null ? `${shown} दिख रहे हैं` : '';
+  $('dens').classList.toggle('hidden', S.home);
+  $('search').placeholder = S.home ? 'मेमोरी खोजें...' : 'फाइल खोजें...';
+}
+$('filters').onclick = e => { const b = e.target.closest('button'); if (!b) return; S.filter = b.dataset.f; refresh(); };
+$('sort').onchange = e => { S.sort = e.target.value; refresh(); };
+$('search').oninput = () => refresh();
+$('dens').onclick = () => { S.dens = (S.dens + 1) % DENS.length; store.set('dens', S.dens); renderGrid(); };
+const refresh = () => S.home ? renderTrips() : renderGrid();
+
+// ===== HOME / TRIPS =====
+function skeletons(el, n, cls) { el.innerHTML = Array(n).fill(`<div class="sk rounded-2xl ${cls}"></div>`).join(''); }
+function fail(el, msg, retry) {
+  el.innerHTML = `<div class="col-span-full text-center py-10 text-red-500"><i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i><p>${msg}</p><button class="mt-3 bg-b text-white px-4 py-2 rounded-full text-sm" id="retry">फिर कोशिश करें</button></div>`;
+  $('retry').onclick = retry;
+}
+async function loadTrips() {
+  skeletons($('trips'), 8, 'h-64');
+  try {
+    const res = await Promise.allSettled(MAIN_FOLDER_IDS.map(id => listAll(`'${id}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`, 'files(id,name,createdTime)', 'createdTime desc')));
+    const bad = MAIN_FOLDER_IDS.filter((id, i) => res[i].status === 'rejected');
+    if (bad.length === res.length) throw new Error('सभी फ़ोल्डर फेल');
+    const seen = new Set();
+    S.trips = res.flatMap(r => r.status === 'fulfilled' ? r.value : []).filter(t => !seen.has(t.id) && seen.add(t.id));
+    if (bad.length) { console.warn('ये फ़ोल्डर ID नहीं खुले:', bad); toast(`${bad.length} फ़ोल्डर ID नहीं खुला: ${bad[0].slice(0, 8)}... (public है? ID सही है?)`, 7000); }
+    renderTrips();
+    S.trips.forEach(loadTripMeta);
+  } catch (e) { console.error(e); fail($('trips'), 'मेमोरीज लोड नहीं हो पाईं (API key और फ़ोल्डर ID जाँचें)', loadTrips); }
+}
+function renderTrips() {
+  const s = q();
+  let l = S.trips.filter(t => t.name.toLowerCase().includes(s) && (S.filter === 'all' || (S.filter === 'image' ? t.p > 0 : t.v > 0)));
+  l = [...l].sort(sorters[S.sort]);
+  setToolbar(S.trips.length, S.trips.filter(t => t.p > 0).length, S.trips.filter(t => t.v > 0).length, l.length);
+  if (!l.length) { $('trips').innerHTML = '<p class="col-span-full text-center text-slate-500 py-10">कोई मेमोरी नहीं मिली।</p>'; return; }
+  $('trips').innerHTML = l.map((t, i) => `
+    <a href="#/${t.id}" data-trip="${t.id}" class="fade group bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition overflow-hidden border border-slate-100 dark:border-slate-700 block" style="animation-delay:${Math.min(i, 10) * 40}ms">
+      <div class="h-48 bg-bl relative overflow-hidden flex items-center justify-center">
+        <i class="fa-solid fa-folder-open text-6xl tx-b opacity-30"></i>
+        <img data-cover="${t.id}" data-id="${(t.covers || [])[0]?.id || ''}" class="cov absolute inset-0 w-full h-full object-cover group-hover:scale-110 opacity-0" alt="">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        <div data-chips="${t.id}" class="absolute bottom-2 left-2 flex gap-1 text-[11px] text-white font-medium"></div>
+      </div>
+      <div class="p-4"><h3 class="font-bold truncate">${esc(t.name)}</h3><p data-meta="${t.id}" class="text-sm text-slate-500">${t.meta || 'लोड हो रहा है...'}</p></div>
+    </a>`).join('');
+  l.forEach(paintMeta);
+}
+function paintMeta(t) {
+  const m = document.querySelector(`[data-meta="${t.id}"]`); if (m && t.meta) m.textContent = t.meta;
+  const ch = document.querySelector(`[data-chips="${t.id}"]`);
+  if (ch && t.meta) ch.innerHTML = [t.p && `<span class="bg-black/50 rounded-full px-2 py-0.5"><i class="fa-regular fa-image"></i> ${t.p}</span>`, t.v && `<span class="bg-black/50 rounded-full px-2 py-0.5"><i class="fa-solid fa-video"></i> ${t.v}</span>`].filter(Boolean).join('');
+  const c = document.querySelector(`[data-cover="${t.id}"]`);
+  if (c && t.covers?.length) { c.dataset.id = t.covers[0].id; addFb(c); c.src = thumb(t.covers[0], 800); c.onload = () => c.classList.remove('opacity-0'); }
+}
+let rafPending = false;
+async function loadTripMeta(t) {
+  try {
+    const f = await listAll(`'${t.id}' in parents and trashed=false`, 'files(id,mimeType,thumbnailLink)');
+    t.p = f.filter(x => x.mimeType.startsWith('image/')).length; t.v = f.filter(isVideo).length;
+    const d = f.filter(isFolder).length;
+    t.meta = [t.p && `${t.p} फोटो`, t.v && `${t.v} वीडियो`, d && `${d} फ़ोल्डर`].filter(Boolean).join(' • ') || 'खाली';
+    let media = f.filter(x => !isFolder(x));
+    if (!media.length) { // सिर्फ सब-फ़ोल्डर हों तो अंदर से कवर लो
+      const sub = f.find(isFolder);
+      if (sub) media = (await listAll(`'${sub.id}' in parents and (mimeType contains 'image/' or mimeType contains 'video/') and trashed=false`, 'files(id,mimeType,thumbnailLink)', undefined, 8)).slice(0, 8);
+    }
+    const withThumb = media.filter(x => x.thumbnailLink), pick = withThumb.length ? withThumb : media;
+    t.covers = pick.slice(0, 4);
+    if (S.home) { S.filter !== 'all' && !rafPending ? (rafPending = true, requestAnimationFrame(() => { rafPending = false; S.home && renderTrips(); })) : (paintMeta(t), setToolbar(S.trips.length, S.trips.filter(x => x.p > 0).length, S.trips.filter(x => x.v > 0).length, null)); }
+  } catch { t.meta = 'फ़ोल्डर'; paintMeta(t); }
+}
+// Hover पर कवर बदलना
+let hv;
+$('trips').onmouseover = e => {
+  const a = e.target.closest('[data-trip]'); if (!a || a.contains(e.relatedTarget)) return;
+  const t = S.trips.find(x => x.id === a.dataset.trip), img = a.querySelector('[data-cover]');
+  if (!t?.covers || t.covers.length < 2) return;
+  let i = 0; clearInterval(hv);
+  hv = setInterval(() => { i = (i + 1) % t.covers.length; img.dataset.id = t.covers[i].id; img.src = thumb(t.covers[i], 800); }, 1000);
+};
+$('trips').onmouseout = e => {
+  const a = e.target.closest('[data-trip]'); if (!a || a.contains(e.relatedTarget)) return;
+  clearInterval(hv); const t = S.trips.find(x => x.id === a.dataset.trip);
+  if (t?.covers?.length) a.querySelector('[data-cover]').src = thumb(t.covers[0], 800);
+};
+
+// ===== GALLERY =====
+function showGalleryShell() { $('home').classList.add('hidden'); $('gallery').classList.remove('hidden'); S.home = false; S.limit = PAGE; $('scroller').scrollTo(0, 0); }
+async function showGallery(ids) {
+  showGalleryShell(); S.isFav = false;
+  $('grid').className = 'grid gap-3 sm:gap-4 ' + DENS[S.dens]; skeletons($('grid'), 10, 'aspect-square');
+  await Promise.all(ids.filter(i => !S.names[i]).map(async i => {
+    try { S.names[i] = (await (await fetch(`https://www.googleapis.com/drive/v3/files/${i}?fields=name&key=${API_KEY}`)).json()).name || 'फ़ोल्डर'; } catch { S.names[i] = 'फ़ोल्डर'; }
+  }));
+  const id = ids[ids.length - 1];
+  $('g-title').textContent = S.names[id];
+  $('crumbs').innerHTML = ids.map(i => esc(S.names[i])).join(' <i class="fa-solid fa-angle-right text-[10px]"></i> ');
+  try {
+    const raw = await listAll(`'${id}' in parents and (mimeType contains 'image/' or mimeType contains 'video/' or mimeType='application/vnd.google-apps.folder') and trashed=false`, 'files(id,name,mimeType,thumbnailLink,createdTime,videoMediaMetadata(durationMillis))');
+    S.items = raw.map(f => ({ ...f, dur: +(f.videoMediaMetadata?.durationMillis || 0) }));
+    renderGrid();
+  } catch { fail($('grid'), 'मीडिया लोड करने में समस्या', () => showGallery(ids)); }
+}
+function showFavs() {
+  showGalleryShell(); S.isFav = true; S.items = Object.values(S.favs);
+  $('g-title').textContent = 'पसंदीदा ❤️'; $('crumbs').textContent = 'आपकी चुनी हुई फोटो और वीडियो';
+  renderGrid();
+}
+function cardHTML(f, i) {
+  if (isFolder(f)) return `<a href="#/${[...location.hash.replace(/^#\/?/, '').split('/').filter(Boolean), f.id].join('/')}" data-n="${esc(f.name)}" data-id="${f.id}" class="fade aspect-square rounded-xl bg-bl flex flex-col items-center justify-center p-2 text-center hover:scale-[1.03] transition"><i class="fa-solid fa-folder-open text-5xl tx-b mb-2"></i><span class="text-xs font-bold truncate w-full">${esc(f.name)}</span></a>`;
+  const fav = S.favs[f.id];
+  return `<div data-v="${S.view.indexOf(f)}" class="fade group aspect-square rounded-xl overflow-hidden relative cursor-pointer bg-slate-300 dark:bg-slate-700 shadow-sm hover:shadow-lg" style="animation-delay:${(i % 12) * 30}ms">
+    <img src="${thumb(f)}" data-id="${f.id}" onerror="this.onerror=null;this.src='${fbThumb(f.id, 500)}'" loading="lazy" alt="${esc(f.name)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+    ${isVideo(f) ? `<div class="absolute inset-0 flex items-center justify-center"><div class="w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white pl-1"><i class="fa-solid fa-play"></i></div></div>${f.dur ? `<span class="absolute bottom-2 left-2 bg-black/60 text-white text-[11px] px-1.5 py-0.5 rounded">${fmt(f.dur)}</span>` : ''}` : ''}
+    <button data-fav="${f.id}" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center ${fav ? '' : 'opacity-0 group-hover:opacity-100'} transition" aria-label="पसंदीदा"><i class="fa-${fav ? 'solid text-rose-400' : 'regular'} fa-heart"></i></button>
+  </div>`;
+}
+function renderGrid() {
+  const s = q(), it = S.items;
+  const nImg = it.filter(f => !isVideo(f) && !isFolder(f)).length, nVid = it.filter(isVideo).length;
+  let l = it.filter(f => f.name.toLowerCase().includes(s) && (S.filter === 'all' || isFolder(f) ? S.filter === 'all' : (S.filter === 'video' ? isVideo(f) : !isVideo(f))));
+  l = [...l].sort((a, b) => (isFolder(b) - isFolder(a)) || (S.isFav ? 0 : sorters[S.sort](a, b)));
+  S.list = l; S.view = l.filter(f => !isFolder(f));
+  setToolbar(nImg + nVid + it.filter(isFolder).length, nImg, nVid, l.length);
+  $('grid').className = 'grid gap-3 sm:gap-4 ' + DENS[S.dens];
+  S.rendered = 0;
+  if (!l.length) { $('grid').innerHTML = '<p class="col-span-full text-center text-slate-500 py-16">यहाँ कोई डाटा नहीं है।</p>'; return; }
+  $('grid').innerHTML = ''; appendCards();
+}
+function appendCards() {
+  const next = S.list.slice(S.rendered, S.limit);
+  $('grid').insertAdjacentHTML('beforeend', next.map((f, i) => cardHTML(f, i)).join(''));
+  S.rendered += next.length;
+}
+// Infinite scroll
+new IntersectionObserver(es => { if (es[0].isIntersecting && !S.home && S.rendered < S.list.length) { S.limit += PAGE; appendCards(); } }, { root: $('scroller'), rootMargin: '600px' }).observe($('sentinel'));
+
+$('back').onclick = () => { const p = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean); location.hash = (S.isFav || p.length <= 1) ? '#/' : '#/' + p.slice(0, -1).join('/'); };
+$('grid').onclick = e => {
+  const fb = e.target.closest('[data-fav]');
+  if (fb) { e.stopPropagation(); toggleFav(S.items.find(f => f.id === fb.dataset.fav)); renderGrid(); return; }
+  const f = e.target.closest('[data-v]'); if (f) openViewer(+f.dataset.v);
+  const d = e.target.closest('[data-n]'); if (d) S.names[d.dataset.id] = d.dataset.n;
+};
+function toggleFav(f) {
+  if (S.favs[f.id]) { delete S.favs[f.id]; toast('पसंदीदा से हटाया'); }
+  else { S.favs[f.id] = { id: f.id, name: f.name, mimeType: f.mimeType, createdTime: f.createdTime, dur: f.dur }; toast('पसंदीदा में जोड़ा ❤️'); }
+  store.set('favs', S.favs); $('fav-count').textContent = Object.keys(S.favs).length;
+  if (S.isFav) S.items = Object.values(S.favs);
+}
+
+// ===== VIEWER =====
+function destroyPlayer() { if (S.player) { try { S.player.pause(); S.player.destroy(); } catch {} S.player = null; } }
+function openViewer(i) {
+  S.idx = i; const f = S.view[i]; if (!f) return;
+  destroyPlayer();
+  const v = $('viewer'); v.classList.remove('hidden'); v.classList.add('flex');
+  $('v-name').textContent = f.name; $('v-count').textContent = `${i + 1} / ${S.view.length}`;
+  $('v-dl').href = mediaUrl(f); $('v-dl').download = f.name;
+  $('v-prev').style.display = i > 0 ? 'flex' : 'none'; $('v-next').style.display = i < S.view.length - 1 ? 'flex' : 'none';
+  $('v-fav').innerHTML = `<i class="fa-${S.favs[f.id] ? 'solid text-rose-400' : 'regular'} fa-heart"></i>`;
+  $('v-mode').classList.toggle('hidden', !isVideo(f)); $('v-mode').classList.remove('animate-pulse');
+  if (isVideo(f)) { stopSlide(); playVideo(f, false); }
+  else {
+    const st = $('stage'); st.innerHTML = `<img src="${thumb(f, 2000)}" alt="${esc(f.name)}" class="max-w-full max-h-[80vh] object-contain rounded fade">`;
+    const img = st.firstChild; img.onerror = () => { img.onerror = null; img.src = mediaUrl(f); };
+    img.onclick = () => img.classList.toggle('zoom');
+  }
+  [S.view[i + 1], S.view[i - 1]].forEach(n => { if (n && !isVideo(n)) new Image().src = thumb(n, 2000); });
+  strip();
+}
+function strip() {
+  const a = Math.max(0, S.idx - 12), b = Math.min(S.view.length, S.idx + 13);
+  $('strip').innerHTML = S.view.slice(a, b).map((f, k) => `<img data-s="${a + k}" src="${thumb(f, 160)}" class="h-14 w-20 object-cover rounded cursor-pointer shrink-0 transition ${a + k === S.idx ? 'ring-2 ring-white' : 'opacity-50 hover:opacity-100'}" alt="">`).join('');
+  $('strip').querySelector('.ring-2')?.scrollIntoView({ inline: 'center', block: 'nearest' });
+}
+$('strip').onclick = e => { const s = e.target.closest('[data-s]'); if (s) openViewer(+s.dataset.s); };
+
+function playVideo(f, drivePlayer) {
+  const st = $('stage'); destroyPlayer(); S.mode = drivePlayer ? 'drive' : 'raw';
+  $('v-mode').classList.toggle('tx-b', drivePlayer);
+  if (drivePlayer) {
+    st.innerHTML = `<iframe src="https://drive.google.com/file/d/${f.id}/preview" allow="autoplay; fullscreen" class="w-full max-w-5xl h-[75vh] rounded-xl border-0 bg-black"></iframe>`;
+    return;
+  }
+  st.innerHTML = `<div class="relative w-full max-w-5xl"><video id="vp" playsinline preload="auto" poster="${thumb(f, 1200)}" src="${mediaUrl(f)}"></video>
+    <div id="buf" class="absolute inset-0 hidden items-center justify-center pointer-events-none z-10"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-white drop-shadow"></i></div></div>`;
+  const el = $('vp');
+  S.player = new Plyr(el, {
+    controls: ['play-large', 'rewind', 'play', 'fast-forward', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
+    settings: ['speed'], speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] }, seekTime: 10, keyboard: { focused: true, global: true }, tooltips: { controls: true, seek: true }, ratio: '16:9'
+  });
+  const buf = $('buf'), showBuf = on => { buf.classList.toggle('hidden', !on); buf.classList.toggle('flex', on); };
+  const pos = store.get('pos', {})[f.id];
+  el.addEventListener('loadedmetadata', () => { if (pos && pos < el.duration - 5) { el.currentTime = pos; toast('पिछली जगह से शुरू'); } el.play().catch(() => {}); }, { once: true });
+  let stall, last = 0;
+  el.addEventListener('waiting', () => { showBuf(true); clearTimeout(stall); stall = setTimeout(() => { toast('वीडियो अटक रहा है? ⚡ स्मूद मोड दबाएँ', 4000); $('v-mode').classList.add('animate-pulse'); }, 5000); });
+  ['playing', 'canplay', 'pause'].forEach(ev => el.addEventListener(ev, () => { showBuf(false); clearTimeout(stall); }));
+  el.addEventListener('timeupdate', () => { if (Date.now() - last > 3000) { last = Date.now(); const p = store.get('pos', {}); p[f.id] = el.currentTime; store.set('pos', p); } });
+  el.addEventListener('ended', () => { const p = store.get('pos', {}); delete p[f.id]; store.set('pos', p); });
+  el.addEventListener('error', () => { toast('सीधा प्लेबैक नहीं हुआ, Drive प्लेयर खुल रहा है'); playVideo(f, true); });
+}
+$('v-mode').onclick = () => { const f = S.view[S.idx]; $('v-mode').classList.remove('animate-pulse'); playVideo(f, S.mode === 'raw'); toast(S.mode === 'drive' ? 'स्मूद मोड ON (Drive प्लेयर)' : 'नॉर्मल प्लेयर'); };
+
+function step(d) { const n = S.idx + d; if (n >= 0 && n < S.view.length) openViewer(n); else stopSlide(); }
+function closeViewer() { stopSlide(); destroyPlayer(); if (document.fullscreenElement) document.exitFullscreen(); $('viewer').classList.add('hidden'); $('viewer').classList.remove('flex'); $('stage').innerHTML = ''; }
+function stopSlide() { clearInterval(S.slide); S.slide = null; $('v-slide').innerHTML = '<i class="fa-solid fa-play"></i>'; }
+$('v-slide').onclick = () => { if (S.slide) return stopSlide(); $('v-slide').innerHTML = '<i class="fa-solid fa-pause"></i>'; S.slide = setInterval(() => step(1), 3500); };
+$('v-prev').onclick = () => step(-1); $('v-next').onclick = () => step(1); $('v-close').onclick = closeViewer;
+$('v-fav').onclick = () => { toggleFav(S.view[S.idx]); openViewer(S.idx); renderGrid(); };
+$('v-fs').onclick = () => document.fullscreenElement ? document.exitFullscreen() : $('viewer').requestFullscreen().catch(() => {});
+document.addEventListener('keydown', e => {
+  if ($('viewer').classList.contains('hidden')) return;
+  const vid = isVideo(S.view[S.idx] || {});
+  if (e.key === 'Escape') closeViewer();
+  if (!vid && e.key === 'ArrowRight' || e.key === 'n') step(1);
+  if (!vid && e.key === 'ArrowLeft' || e.key === 'p') step(-1);
+});
+let tx = 0;
+$('stage').addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+$('stage').addEventListener('touchend', e => { if (isVideo(S.view[S.idx] || {})) return; const d = e.changedTouches[0].clientX - tx; if (Math.abs(d) > 60) step(d < 0 ? 1 : -1); });
+
+// ===== ROUTER =====
+async function route() {
+  closeViewer(); openNav(false);
+  const h = location.hash.replace(/^#\/?/, ''), ids = h.split('/').filter(Boolean);
+  $('nav-home').classList.toggle('nav-on', h !== 'fav'); $('nav-fav').classList.toggle('nav-on', h === 'fav');
+  $('search').value = ''; S.filter = 'all';
+  if (h === 'fav') return showFavs();
+  if (!ids.length) { $('gallery').classList.add('hidden'); $('home').classList.remove('hidden'); S.home = true; renderTrips(); return; }
+  ids.forEach(id => { const t = S.trips.find(t => t.id === id); if (t) S.names[id] = t.name; });
+  showGallery(ids);
+}
+window.addEventListener('hashchange', route);
+
+// ===== INIT =====
+applyTheme(); $('sort').value = S.sort; $('fav-count').textContent = Object.keys(S.favs).length;
+loadTrips().then(route);
+</script>
+</body>
+</html>
